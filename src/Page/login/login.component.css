@@ -1,21 +1,14 @@
 .login-page {
   height: 100vh;
 
-  .left-side {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f8f9fa;
+  .left-side img {
+    object-fit: cover;
     height: 100%;
-
-    img {
-      max-height: 100%;
-      width: auto;
-    }
+    width: 100%;
   }
 
   .login-content {
-    width: 60%;
+    width: 80%;
     margin: 0 auto;
 
     .app-title {
