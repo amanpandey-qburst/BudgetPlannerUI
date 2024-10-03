@@ -27,6 +27,7 @@ export class LoginComponent {
           photoUrl: result.photoUrl,
           id: result.id,
           idToken: result.idToken,
+          email: result.email,
         });
         this.router.navigate(['/registration']);
       },

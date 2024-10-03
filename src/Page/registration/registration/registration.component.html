@@ -1,70 +1,63 @@
-<!-- src/app/registration/registration.component.html -->
+<div class="registration-form">
+  <h2>Registration</h2>
 
-<div class="container">
-  <h2>Registration Page</h2>
-
-  <div *ngIf="userData">
-    <div class="profile">
-      <!-- Display the user's profile picture -->
-      <img
-        [src]="userData.photoUrl"
-        alt="{{ userData.firstName }}"
-        class="profile-pic"
-      />
-      <h3>{{ userData.firstName }} {{ userData.lastName }}</h3>
-      <p><strong>Email:</strong> {{ userData.email }}</p>
+  <form>
+    <div *ngIf="userData?.photoUrl">
+      <h5>Profile Photo</h5>
+      <img [src]="userData.photoUrl" alt="User Photo" />
     </div>
 
-    <!-- Registration Form -->
-    <form class="registration-form">
-      <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input
-          type="text"
-          id="firstName"
-          class="form-control"
-          [(ngModel)]="userData.firstName"
-          name="firstName"
-        />
-      </div>
+    <div>
+      <label for="firstName">First Name</label>
+      <input
+        type="text"
+        id="firstName"
+        [(ngModel)]="userData.firstName"
+        name="firstName"
+      />
+    </div>
 
-      <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input
-          type="text"
-          id="lastName"
-          class="form-control"
-          [(ngModel)]="userData.lastName"
-          name="lastName"
-        />
-      </div>
+    <div>
+      <label for="lastName">Last Name</label>
+      <input
+        type="text"
+        id="lastName"
+        [(ngModel)]="userData.lastName"
+        name="lastName"
+      />
+    </div>
 
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          class="form-control"
-          [(ngModel)]="userData.email"
-          name="email"
-          readonly
-        />
-      </div>
+    <div>
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        [(ngModel)]="userData.email"
+        name="email"
+        readonly
+      />
+    </div>
 
-      <div class="form-group">
-        <label for="idToken">ID Token</label>
-        <input
-          type="text"
-          id="idToken"
-          class="form-control"
-          [(ngModel)]="userData.idToken"
-          name="idToken"
-          readonly
-        />
-      </div>
+    <div>
+      <label for="gender">Gender</label>
+      <select id="gender" [(ngModel)]="userData.gender" name="gender">
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
 
-      <!-- Additional Fields as needed -->
-      <button type="submit" class="btn btn-primary">Submit Registration</button>
-    </form>
-  </div>
+    <div>
+      <label for="dateOfBirth">Date of Birth</label>
+      <input
+        type="date"
+        id="dateOfBirth"
+        [(ngModel)]="userData.dateOfBirth"
+        name="dateOfBirth"
+      />
+    </div>
+
+    <button type="submit">Register</button>
+  </form>
 </div>

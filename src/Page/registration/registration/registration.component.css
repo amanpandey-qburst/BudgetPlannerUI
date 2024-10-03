@@ -1,49 +1,44 @@
-/* src/app/registration/registration.component.css */
-
-.container {
-  max-width: 600px;
+.registration-form {
+  width: 400px;
   margin: 0 auto;
   padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
 }
 
-.profile {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.profile-pic {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin-bottom: 10px;
-}
-
-.registration-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group {
+.registration-form div {
   margin-bottom: 15px;
 }
 
-.form-group label {
+label {
+  display: block;
   font-weight: bold;
+  margin-bottom: 5px;
 }
 
-.form-group input {
-  padding: 10px;
-  font-size: 1rem;
+input[type="text"],
+input[type="email"] {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
 }
 
-.btn {
-  padding: 10px;
-  background-color: #007bff;
+button {
+  padding: 10px 15px;
+  background-color: #4caf50;
   color: white;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
 }
 
-.btn-primary:hover {
-  background-color: #0056b3;
+button:hover {
+  background-color: #45a049;
+}
+
+img {
+  margin-top: 15px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
 }

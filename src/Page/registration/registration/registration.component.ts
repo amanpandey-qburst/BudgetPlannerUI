@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UserDataService } from '../../../Service/userData/user-data.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-registration',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.css',
 })
