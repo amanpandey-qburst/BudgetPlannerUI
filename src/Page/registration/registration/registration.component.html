@@ -1,14 +1,14 @@
 <div class="registration-form">
   <h2>Registration</h2>
 
-  <form>
-    <div *ngIf="userData?.photoUrl">
+  <form (ngSubmit)="submitRegistration()">
+    <div>
       <h5>Profile Photo</h5>
       <img [src]="userData.photoUrl" alt="User Photo" />
     </div>
 
     <div>
-      <label for="firstName">First Name</label>
+      <label for="firstName">First Name<span style="color: red">*</span></label>
       <input
         type="text"
         id="firstName"
@@ -18,7 +18,7 @@
     </div>
 
     <div>
-      <label for="lastName">Last Name</label>
+      <label for="lastName">Last Name<span style="color: red">*</span></label>
       <input
         type="text"
         id="lastName"
@@ -28,7 +28,7 @@
     </div>
 
     <div>
-      <label for="email">Email</label>
+      <label for="email">Email<span style="color: red">*</span></label>
       <input
         type="email"
         id="email"
@@ -39,7 +39,7 @@
     </div>
 
     <div>
-      <label for="gender">Gender</label>
+      <label for="gender">Gender<span style="color: red">*</span></label>
       <select id="gender" [(ngModel)]="userData.gender" name="gender">
         <option value="">Select Gender</option>
         <option value="Male">Male</option>
@@ -49,7 +49,9 @@
     </div>
 
     <div>
-      <label for="dateOfBirth">Date of Birth</label>
+      <label for="dateOfBirth"
+        >Date of Birth<span style="color: red">*</span></label
+      >
       <input
         type="date"
         id="dateOfBirth"
