@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UserDataService } from '../../../Service/userData/user-data.service';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
@@ -13,8 +14,8 @@ import { CommonModule } from '@angular/common';
 })
 export class RegistrationComponent implements OnInit {
   userData: any;
+  router = inject(Router);
 
-  // API endpoint for registering user
   private apiUrl = 'https://localhost:7156/api/User/registeruser';
 
   constructor(
@@ -44,14 +45,16 @@ export class RegistrationComponent implements OnInit {
     };
 
     // Post the data to the API
-    this.http.post(this.apiUrl, registrationData).subscribe({
-      next: (response) => {
-        console.log('Registration successful', response);
-        // Optionally redirect to another page after registration
-      },
-      error: (error) => {
-        console.error('Error during registration', error);
-      },
-    });
+    this.http
+      .post(this.apiUrl, registrationData, { responseType: 'text' })
+      .subscribe({
+        next: (response) => {
+          console.log('Registration successful', response);
+          this.router.navigate(['/home']);
+        },
+        error: (error) => {
+          console.error('Error during registration', error);
+        },
+      });
   }
 }

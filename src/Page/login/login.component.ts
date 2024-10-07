@@ -45,6 +45,7 @@ export class LoginComponent {
   }
 
   checkUserEmail(email: string) {
+    console.log('email check', email);
     const apiUrl = `https://localhost:7156/api/User/getUserWithEmail?email=${email}`;
 
     this.http.get(apiUrl).subscribe({
