@@ -15,8 +15,9 @@ import { Router } from '@angular/router';
 export class RegistrationComponent implements OnInit {
   userData: any;
   router = inject(Router);
+  errorMessages: string[] = [];
 
-  private apiUrl = 'https://localhost:7156/api/User/registeruser';
+  private apiUrl = 'https://localhost:7156/api/User/registerUser';
 
   constructor(
     private userDataService: UserDataService,
@@ -33,14 +34,45 @@ export class RegistrationComponent implements OnInit {
 
   // Function to handle form submission
   submitRegistration() {
+    this.errorMessages = []; // Clear previous error messages
+
+    // Validate form fields
+    if (!this.userData.firstName) {
+      this.errorMessages.push('First Name is required.');
+    }
+    if (!this.userData.lastName) {
+      this.errorMessages.push('Last Name is required.');
+    }
+    if (!this.userData.email) {
+      this.errorMessages.push('Email is required.');
+    }
+    if (!this.userData.gender) {
+      this.errorMessages.push('Gender is required.');
+    }
+    if (!this.userData.dateOfBirth) {
+      this.errorMessages.push('Date of Birth is required.');
+    } else {
+      const today = new Date();
+      const selectedDate = new Date(this.userData.dateOfBirth);
+      if (selectedDate > today) {
+        this.errorMessages.push('Date of Birth cannot be in the future.');
+      }
+    }
+
+    // If there are any errors, stop the submission
+    if (this.errorMessages.length > 0) {
+      return;
+    }
+
+    const dateOfBirthISO = new Date(this.userData.dateOfBirth).toISOString();
     const registrationData = {
-      authId: this.userData.id, // Map the authId with user's ID
+      authId: this.userData.id,
       idToken: this.userData.idToken,
       firstName: this.userData.firstName,
       lastName: this.userData.lastName,
       emailId: this.userData.email,
-      dateOfBirth: new Date().toISOString(), // Default or get this from user input
-      gender: 'Male', // You can update this field from user input
+      dateOfBirth: dateOfBirthISO,
+      gender: this.userData.gender,
       photoURL: this.userData.photoUrl,
     };
 

@@ -61,5 +61,14 @@
     </div>
 
     <button type="submit">Register</button>
+
+    <!-- Display error messages -->
+    <div *ngIf="errorMessages.length > 0" class="error-messages">
+      <ul>
+        <li *ngFor="let message of errorMessages" style="color: red">
+          {{ message }}
+        </li>
+      </ul>
+    </div>
   </form>
 </div>
