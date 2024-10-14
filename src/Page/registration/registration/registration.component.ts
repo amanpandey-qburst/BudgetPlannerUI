@@ -5,6 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
+interface IncomeSource {
+  amount: number;
+  source: string;
+}
+
 @Component({
   selector: 'app-registration',
   standalone: true,
@@ -16,6 +21,8 @@ export class RegistrationComponent implements OnInit {
   userData: any;
   router = inject(Router);
   errorMessages: string[] = [];
+  showSecondForm: boolean = false;
+  incomeSources: IncomeSource[] = [{ amount: 0, source: '' }];
 
   private apiUrl = 'https://localhost:7156/api/User/registerUser';
 
@@ -82,11 +89,23 @@ export class RegistrationComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Registration successful', response);
-          this.router.navigate(['/home']);
+          this.showSecondForm = true;
         },
         error: (error) => {
           console.error('Error during registration', error);
         },
       });
+  }
+
+  skip() {
+    this.router.navigate(['/home']);
+  }
+
+  addIncomeSource() {
+    this.incomeSources.push({ amount: 0, source: '' });
+  }
+
+  submitIncomeDetails() {
+    console.log('Income Sources:', this.incomeSources);
   }
 }

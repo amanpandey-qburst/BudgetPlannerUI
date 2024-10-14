@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { UserDataService } from '../../../Service/userData/user-data.service';
 import { SocialAuthService } from '@abacritt/angularx-social-login';
@@ -10,18 +10,22 @@ import { SocialAuthService } from '@abacritt/angularx-social-login';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
-  router = inject(Router);
-  userDataService = inject(UserDataService);
-  socialAuthService = inject(SocialAuthService);
+export class HomeComponent {
+  constructor(
+    private router: Router,
+    private userDataService: UserDataService,
+    private socialAuthService: SocialAuthService
+  ) {}
 
-  ngOnInit() {
-    console.log('data cleared');
+  // Function to handle logout
+  logout() {
     this.userDataService.clearUserData();
     this.socialAuthService.signOut();
+    this.router.navigate(['/login']); // Redirect to login
   }
 
-  logout() {
-    this.router.navigate(['/login']);
+  // Function to handle navigation based on the passed route
+  navigateTo(route: string) {
+    this.router.navigate([`/home/${route}`]); // Navigate to route
   }
 }

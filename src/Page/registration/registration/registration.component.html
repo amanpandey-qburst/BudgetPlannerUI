@@ -1,7 +1,7 @@
 <div class="registration-form">
-  <h2>Registration</h2>
-
-  <form (ngSubmit)="submitRegistration()">
+  <form *ngIf="!showSecondForm" (ngSubmit)="submitRegistration()">
+    <h2>Registration</h2>
+    <!-- First form content remains unchanged -->
     <div>
       <h5>Profile Photo</h5>
       <img [src]="userData.photoUrl" alt="User Photo" />
@@ -71,4 +71,35 @@
       </ul>
     </div>
   </form>
+
+  <!-- Second form, which is displayed after registration -->
+  <div *ngIf="showSecondForm">
+    <h2>Income Details</h2>
+
+    <form (ngSubmit)="submitIncomeDetails()">
+      <div *ngFor="let income of incomeSources; let i = index">
+        <label for="income{{ i }}">Income Amount</label>
+        <input
+          type="number"
+          id="income{{ i }}"
+          [(ngModel)]="income.amount"
+          name="income{{ i }}"
+          required
+        />
+
+        <label for="source{{ i }}">Source</label>
+        <input
+          type="text"
+          id="source{{ i }}"
+          [(ngModel)]="income.source"
+          name="source{{ i }}"
+          required
+        />
+      </div>
+
+      <button type="button" (click)="addIncomeSource()">+</button>
+      <button type="submit">Submit Income Details</button>
+      <button type="button" (click)="skip()">Skip</button>
+    </form>
+  </div>
 </div>
