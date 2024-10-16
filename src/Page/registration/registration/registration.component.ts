@@ -19,6 +19,7 @@ interface IncomeSource {
 })
 export class RegistrationComponent implements OnInit {
   userData: any;
+  userId: string | null = null;
   router = inject(Router);
   errorMessages: string[] = [];
   showSecondForm: boolean = false;
@@ -85,11 +86,15 @@ export class RegistrationComponent implements OnInit {
 
     // Post the data to the API
     this.http
-      .post(this.apiUrl, registrationData, { responseType: 'text' })
+      .post(this.apiUrl, registrationData, { responseType: 'json' }) // Changed responseType to 'json'
       .subscribe({
-        next: (response) => {
+        next: (response: any) => {
           console.log('Registration successful', response);
-          this.showSecondForm = true;
+
+          // Store the userId from the response
+          this.userId = response.data; // Assuming response.data contains the userId
+
+          this.showSecondForm = true; // Show the second form
         },
         error: (error) => {
           console.error('Error during registration', error);
@@ -105,7 +110,32 @@ export class RegistrationComponent implements OnInit {
     this.incomeSources.push({ amount: 0, source: '' });
   }
 
+  removeIncomeSource(index: number) {
+    this.incomeSources.splice(index, 1);
+  }
+
+  // Function to handle income submission
   submitIncomeDetails() {
-    console.log('Income Sources:', this.incomeSources);
+    if (!this.userId) {
+      console.error('UserId not found. Cannot submit income details.');
+      return;
+    }
+
+    const apiUrl = `https://localhost:7156/api/User/addIncome/${this.userId}`;
+
+    this.http
+      .post(apiUrl, this.incomeSources, {
+        headers: { 'Content-Type': 'application/json' },
+        responseType: 'text', // Set responseType to 'text' to handle non-JSON responses
+      })
+      .subscribe({
+        next: (response) => {
+          console.log('Income details submitted successfully', response);
+          this.router.navigate(['/home']);
+        },
+        error: (error) => {
+          console.error('Error submitting income details', error);
+        },
+      });
   }
 }

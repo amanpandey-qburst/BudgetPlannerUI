@@ -78,7 +78,9 @@
 
     <form (ngSubmit)="submitIncomeDetails()">
       <div *ngFor="let income of incomeSources; let i = index">
-        <label for="income{{ i }}">Income Amount</label>
+        <label for="income{{ i }}"
+          >Income Amount<span style="color: red">*</span></label
+        >
         <input
           type="number"
           id="income{{ i }}"
@@ -87,7 +89,9 @@
           required
         />
 
-        <label for="source{{ i }}">Source</label>
+        <label for="source{{ i }}"
+          >Source<span style="color: red">*</span></label
+        >
         <input
           type="text"
           id="source{{ i }}"
@@ -95,6 +99,8 @@
           name="source{{ i }}"
           required
         />
+
+        <button type="button" (click)="removeIncomeSource(i)">X</button>
       </div>
 
       <button type="button" (click)="addIncomeSource()">+</button>
