@@ -114,7 +114,6 @@ export class RegistrationComponent implements OnInit {
     this.incomeSources.splice(index, 1);
   }
 
-  // Function to handle income submission
   submitIncomeDetails() {
     if (!this.userId) {
       console.error('UserId not found. Cannot submit income details.');
@@ -126,7 +125,7 @@ export class RegistrationComponent implements OnInit {
     this.http
       .post(apiUrl, this.incomeSources, {
         headers: { 'Content-Type': 'application/json' },
-        responseType: 'text', // Set responseType to 'text' to handle non-JSON responses
+        responseType: 'text',
       })
       .subscribe({
         next: (response) => {

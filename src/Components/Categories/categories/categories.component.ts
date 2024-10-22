@@ -1,12 +1,72 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import {
+  Category,
+  CategoryService,
+} from '../../../Service/category/category.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './categories.component.html',
-  styleUrl: './categories.component.css'
+  styleUrls: ['./categories.component.css'],
 })
-export class CategoriesComponent {
+export class CategoriesComponent implements OnInit {
+  categories: Category[] = [];
+  isAddCategoryPopupOpen = false;
+  newCategory: Category = {
+    id: '',
+    name: '',
+    description: '',
+    isBasic: false,
+    isDeleted: false,
+  };
 
+  constructor(private categoryService: CategoryService) {}
+
+  ngOnInit(): void {
+    this.categoryService.getCategories().subscribe(
+      (data) => {
+        this.categories = data;
+      },
+      (error) => {
+        console.error('Error fetching categories', error);
+      }
+    );
+  }
+
+  addCategory(): void {
+    console.log('Add Category card clicked');
+  }
+
+  openAddCategoryPopup(): void {
+    this.isAddCategoryPopupOpen = true;
+  }
+
+  // Close the add category popup
+  closeAddCategoryPopup(): void {
+    this.isAddCategoryPopupOpen = false;
+  }
+
+  // Submit the new category
+  submitCategory(): void {
+    // You can implement additional logic here like form validation or API requests
+    console.log('New category:', this.newCategory);
+
+    // Example: You could send this new category to your API
+    this.categoryService.addCategory(this.newCategory).subscribe(
+      (response) => {
+        // Optionally add the new category to the local list
+        this.categories.push(response);
+
+        // Close the popup after adding the category
+        this.closeAddCategoryPopup();
+      },
+      (error) => {
+        console.error('Error adding category', error);
+      }
+    );
+  }
 }
