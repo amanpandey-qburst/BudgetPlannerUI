@@ -10,12 +10,17 @@ export interface Category {
   isDeleted: boolean;
 }
 
+export interface CategoryCreateDto {
+  name: string;
+  description: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  private apiUrl = 'https://localhost:7156/api/Category'; // Endpoint for getting categories
-  private addCategoryUrl = 'https://localhost:7156/api/Category/Add'; // Example endpoint for adding categories
+  private apiUrl = 'https://localhost:7156/api/Category';
+  private addCategoryUrl = 'https://localhost:7156/api/Category';
 
   constructor(private http: HttpClient) {}
 
@@ -25,7 +30,7 @@ export class CategoryService {
   }
 
   // Add a new category
-  addCategory(category: Category): Observable<Category> {
-    return this.http.post<Category>(this.addCategoryUrl, category);
+  addCategory(category: CategoryCreateDto): Observable<Category> {
+    return this.http.post<Category>(this.apiUrl, category);
   }
 }

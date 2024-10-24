@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {
   Category,
+  CategoryCreateDto,
   CategoryService,
 } from '../../../Service/category/category.service';
 import { CommonModule } from '@angular/common';
@@ -50,15 +51,17 @@ export class CategoriesComponent implements OnInit {
     this.isAddCategoryPopupOpen = false;
   }
 
-  // Submit the new category
   submitCategory(): void {
-    // You can implement additional logic here like form validation or API requests
-    console.log('New category:', this.newCategory);
+    // Ensure only name and description are sent
+    const newCategoryData: CategoryCreateDto = {
+      name: this.newCategory.name,
+      description: this.newCategory.description,
+    };
 
-    // Example: You could send this new category to your API
-    this.categoryService.addCategory(this.newCategory).subscribe(
+    // Send the new category to your API
+    this.categoryService.addCategory(newCategoryData).subscribe(
       (response) => {
-        // Optionally add the new category to the local list
+        // Add the newly created category to the local list
         this.categories.push(response);
 
         // Close the popup after adding the category
