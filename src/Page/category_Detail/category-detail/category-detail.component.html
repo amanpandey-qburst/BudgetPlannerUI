@@ -1,0 +1,39 @@
+<!-- Category Detail Page -->
+<div class="category-detail-container">
+  <h2>{{ category?.name }}</h2>
+  <p>{{ category?.description }}</p>
+
+  <!-- Edit Button -->
+  <button (click)="openEditCategoryModal()">Edit</button>
+</div>
+
+<!-- Edit Category Modal -->
+<div class="modal" *ngIf="isEditCategoryModalOpen">
+  <div class="modal-content">
+    <h2>Edit Category</h2>
+
+    <form (ngSubmit)="submitEditCategory()">
+      <label for="name">Category Name</label>
+      <input
+        type="text"
+        id="name"
+        [(ngModel)]="editCategoryData.name"
+        name="name"
+        required
+      />
+
+      <label for="description">Category Description</label>
+      <textarea
+        id="description"
+        [(ngModel)]="editCategoryData.description"
+        name="description"
+        required
+      ></textarea>
+
+      <div class="modal-actions">
+        <button type="submit">Save Changes</button>
+        <button type="button" (click)="closeEditCategoryModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

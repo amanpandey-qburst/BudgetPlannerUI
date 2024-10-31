@@ -28,7 +28,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000; /* Keeps it above the content */
+  z-index: 1000;
 }
 
 .navbar-brand {
@@ -60,12 +60,13 @@ body {
   background-color: #ff3333;
 }
 
-/* Main Container and Sidebar */
 .container {
   display: flex;
-  height: calc(100vh - 60px); /* Adjusting for navbar height */
-  margin-top: 60px; /* Leave space for the navbar */
+  height: calc(100vh - 60px);
+  margin-top: 60px;
   overflow: hidden;
+  width: 100vw;
+  margin-left: 200px;
 }
 
 .sidebar {
@@ -76,10 +77,10 @@ body {
   flex-direction: column;
   align-items: center;
   position: fixed;
-  top: 60px; /* Start below the navbar */
+  top: 60px;
   bottom: 0;
   left: 0;
-  z-index: 999; /* Keeps it above the content */
+  z-index: 999;
 }
 
 .sidebar ul {
@@ -111,11 +112,10 @@ body {
   color: black;
 }
 
-/* Content Styling */
 .content {
-  margin-left: 200px; /* Leave space for the sidebar */
   overflow-y: auto;
-  width: calc(100% - 200px);
   background-color: #f8f9fa;
-  height: calc(100vh - 60px); /* Adjust for the height of the navbar */
+  height: calc(100vh - 60px);
+  padding: 0%;
+  width: 100%;
 }

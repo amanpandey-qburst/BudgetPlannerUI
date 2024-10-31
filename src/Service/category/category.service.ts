@@ -33,4 +33,14 @@ export class CategoryService {
   addCategory(category: CategoryCreateDto): Observable<Category> {
     return this.http.post<Category>(this.apiUrl, category);
   }
+
+  updateCategory(
+    id: string,
+    category: Partial<Category>
+  ): Observable<Category> {
+    return this.http.put<Category>(
+      `https://localhost:7156/api/Category/${id}`,
+      category
+    );
+  }
 }

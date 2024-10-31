@@ -6,6 +6,7 @@ import {
 } from '../../../Service/category/category.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-categories',
@@ -25,7 +26,10 @@ export class CategoriesComponent implements OnInit {
     isDeleted: false,
   };
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(
+    private categoryService: CategoryService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.categoryService.getCategories().subscribe(
@@ -49,6 +53,10 @@ export class CategoriesComponent implements OnInit {
   // Close the add category popup
   closeAddCategoryPopup(): void {
     this.isAddCategoryPopupOpen = false;
+  }
+
+  navigateToCategoryDetails(category: any): void {
+    this.router.navigate(['home/categorydetails'], { state: { category } });
   }
 
   submitCategory(): void {
