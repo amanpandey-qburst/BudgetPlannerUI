@@ -54,4 +54,15 @@ export class CategoryDetailComponent implements OnInit {
         );
     }
   }
+
+  deleteCategory(): void {
+    this.categoryService.deleteCategory(this.category.id).subscribe(
+      () => {
+        this.router.navigate(['home/categories']);
+      },
+      (error) => {
+        console.error('Error deleting category', error);
+      }
+    );
+  }
 }

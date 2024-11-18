@@ -1,10 +1,20 @@
 <!-- Category Detail Page -->
 <div class="category-detail-container">
-  <h2>{{ category?.name }}</h2>
+  <!-- Category Name and Description -->
+  <h3>{{ category?.name }}</h3>
   <p>{{ category?.description }}</p>
 
-  <!-- Edit Button -->
-  <button (click)="openEditCategoryModal()">Edit</button>
+  <!-- Buttons Aligned to the Right -->
+  <div class="action-buttons">
+    <button (click)="openEditCategoryModal()">Edit</button>
+    <button (click)="deleteCategory()" class="delete-button">Delete</button>
+  </div>
+
+  <!-- Subcategories Section -->
+  <div class="subcategories-section">
+    <h3>Subcategories</h3>
+    <p>There are currently no subcategories.</p>
+  </div>
 </div>
 
 <!-- Edit Category Modal -->

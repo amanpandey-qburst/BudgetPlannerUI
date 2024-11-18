@@ -34,6 +34,10 @@ export class CategoryService {
     return this.http.post<Category>(this.apiUrl, category);
   }
 
+  deleteCategory(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
   updateCategory(
     id: string,
     category: Partial<Category>

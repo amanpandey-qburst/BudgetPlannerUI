@@ -1,3 +1,63 @@
+/* Category Detail Styles */
+.category-detail-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.category-detail-container h2 {
+  color: #333;
+}
+
+.category-detail-container p {
+  color: #555;
+  margin: 10px 0;
+}
+
+/* Action Buttons Aligned to the Right */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.action-buttons button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.action-buttons button:first-child {
+  background-color: #007bff;
+  color: white;
+}
+
+.action-buttons .delete-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Subcategories Section */
+.subcategories-section {
+  margin-top: 20px;
+}
+
+.subcategories-section h3 {
+  margin: 10px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.subcategories-section p {
+  color: #757575;
+  margin: 5px 0;
+}
+
+/* Modal Styles */
 .modal {
   position: fixed;
   top: 0;

@@ -1,7 +1,8 @@
 <div class="navbar">
+  <button class="hamburger">☰</button>
   <div class="navbar-brand">Expense Tracker</div>
   <div class="navbar-menu">
-    <span class="username">Hello, User</span>
+    <span class="username">Hello, Aman</span>
     <button class="logout-btn" (click)="logout()">Logout</button>
   </div>
 </div>
@@ -9,9 +10,27 @@
 <div class="container">
   <div class="sidebar">
     <ul>
-      <li><a (click)="navigateTo('dashboard')">Dashboard</a></li>
-      <li><a (click)="navigateTo('categories')">Categories</a></li>
-      <li><a (click)="navigateTo('plans')">Plans</a></li>
+      <li>
+        <a
+          (click)="setActive('dashboard')"
+          [class.active]="activeMenu === 'dashboard'"
+        >
+          Dashboard
+        </a>
+      </li>
+      <li>
+        <a
+          (click)="setActive('categories')"
+          [class.active]="activeMenu === 'categories'"
+        >
+          Categories
+        </a>
+      </li>
+      <li>
+        <a (click)="setActive('plans')" [class.active]="activeMenu === 'plans'">
+          Plans
+        </a>
+      </li>
     </ul>
   </div>
 

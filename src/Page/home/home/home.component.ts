@@ -17,6 +17,13 @@ export class HomeComponent {
     private socialAuthService: SocialAuthService
   ) {}
 
+  activeMenu: string = '';
+
+  setActive(menu: string): void {
+    this.activeMenu = menu;
+    this.navigateTo(menu); // Call your existing navigation logic
+  }
+
   // Function to handle logout
   logout() {
     this.userDataService.clearUserData();
