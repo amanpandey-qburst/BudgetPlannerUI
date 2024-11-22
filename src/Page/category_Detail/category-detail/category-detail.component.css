@@ -41,20 +41,54 @@
   color: white;
 }
 
-/* Subcategories Section */
-.subcategories-section {
-  margin-top: 20px;
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-.subcategories-section h3 {
-  margin: 10px 0;
+.subcategory-card {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  width: calc(33.33% - 16px); /* Three cards per row with spacing */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.subcategory-details h4 {
+  margin: 0;
   font-size: 18px;
-  color: #333;
 }
 
-.subcategories-section p {
-  color: #757575;
-  margin: 5px 0;
+.subcategory-details p {
+  margin: 8px 0 16px;
+  color: #666;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-actions button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.card-actions button:hover {
+  background-color: #f0f0f0;
+}
+
+.delete-button {
+  color: #fff;
+  background-color: #e74c3c;
+}
+
+.delete-button:hover {
+  background-color: #c0392b;
 }
 
 /* Modal Styles */

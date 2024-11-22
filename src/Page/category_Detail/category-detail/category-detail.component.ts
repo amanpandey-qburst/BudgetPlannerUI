@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CategoryService } from '../../../Service/category/category.service';
+import { SubcategoryService } from '../../../Service/subcategory/subcategory.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -14,10 +15,14 @@ import { FormsModule } from '@angular/forms';
 export class CategoryDetailComponent implements OnInit {
   category: any;
   isEditCategoryModalOpen = false;
+  isCreateSubcategoryModalOpen = false;
   editCategoryData = { name: '', description: '' };
+  subcategories: any[] = [];
+  newSubcategoryData = { name: '', description: '' };
 
   constructor(
     private categoryService: CategoryService,
+    private subcategoryService: SubcategoryService,
     private router: Router
   ) {}
 
@@ -26,6 +31,21 @@ export class CategoryDetailComponent implements OnInit {
     if (!this.category) {
       this.router.navigate(['home/categories']);
     }
+    this.fetchSubcategories();
+  }
+
+  fetchSubcategories(): void {
+    this.subcategoryService
+      .getSubCategoriesByCategoryId(this.category.id)
+      .subscribe(
+        (data) => {
+          this.subcategories = data;
+        },
+        (error) => {
+          console.error('Error fetching subcategories:', error);
+          this.subcategories = []; // Ensure the array is empty on error
+        }
+      );
   }
 
   openEditCategoryModal(): void {
@@ -62,6 +82,52 @@ export class CategoryDetailComponent implements OnInit {
       },
       (error) => {
         console.error('Error deleting category', error);
+      }
+    );
+  }
+
+  // Open modal to create new subcategory
+  openCreateSubcategoryModal(): void {
+    this.isCreateSubcategoryModalOpen = true;
+    this.newSubcategoryData = { name: '', description: '' }; // Reset form
+  }
+
+  // Close create subcategory modal
+  closeCreateSubcategoryModal(): void {
+    this.isCreateSubcategoryModalOpen = false;
+  }
+
+  // Submit create subcategory form
+  submitCreateSubcategory(): void {
+    const subcategoryToCreate = {
+      ...this.newSubcategoryData,
+      categoryId: this.category.id, // Make sure to associate it with the current category
+    };
+
+    this.subcategoryService.createSubCategory(subcategoryToCreate).subscribe(
+      (newSubcategory) => {
+        this.subcategories.push(newSubcategory); // Add the new subcategory to the list
+        this.closeCreateSubcategoryModal(); // Close modal
+      },
+      (error) => {
+        console.error('Error creating subcategory:', error);
+      }
+    );
+  }
+
+  editSubcategory(subcategory: any): void {
+    this.editCategoryData.name = subcategory.name;
+    this.editCategoryData.description = subcategory.description;
+    this.isEditCategoryModalOpen = true;
+  }
+  deleteSubcategory(id: string): void {
+    this.subcategoryService.deleteSubCategory(id).subscribe(
+      () => {
+        // Refresh the subcategories list after deletion
+        this.subcategories = this.subcategories.filter((s) => s.id !== id);
+      },
+      (error) => {
+        console.error('Error deleting subcategory:', error);
       }
     );
   }

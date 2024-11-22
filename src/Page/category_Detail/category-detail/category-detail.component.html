@@ -10,10 +10,76 @@
     <button (click)="deleteCategory()" class="delete-button">Delete</button>
   </div>
 
+  <div class="create-subcategory-button">
+    <button (click)="openCreateSubcategoryModal()">Create Subcategory</button>
+  </div>
+
+  <!-- Subcategories Section -->
   <!-- Subcategories Section -->
   <div class="subcategories-section">
     <h3>Subcategories</h3>
-    <p>There are currently no subcategories.</p>
+
+    <div
+      class="card-container"
+      *ngIf="subcategories.length > 0; else noSubcategoriesMessage"
+    >
+      <div class="subcategory-card" *ngFor="let subcategory of subcategories">
+        <!-- Subcategory Details -->
+        <div class="subcategory-details">
+          <h4>{{ subcategory.name }}</h4>
+          <p>{{ subcategory.description }}</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button (click)="editSubcategory(subcategory)">Edit</button>
+          <button
+            (click)="deleteSubcategory(subcategory.id)"
+            class="delete-button"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fallback message -->
+    <ng-template #noSubcategoriesMessage>
+      <p>There are currently no subcategories.</p>
+    </ng-template>
+  </div>
+</div>
+
+<!-- Create Subcategory Modal -->
+<div class="modal" *ngIf="isCreateSubcategoryModalOpen">
+  <div class="modal-content">
+    <h2>Create Subcategory</h2>
+
+    <form (ngSubmit)="submitCreateSubcategory()">
+      <label for="name">Subcategory Name</label>
+      <input
+        type="text"
+        id="name"
+        [(ngModel)]="newSubcategoryData.name"
+        name="name"
+        required
+      />
+
+      <label for="description">Subcategory Description</label>
+      <textarea
+        id="description"
+        [(ngModel)]="newSubcategoryData.description"
+        name="description"
+        required
+      ></textarea>
+
+      <div class="modal-actions">
+        <button type="submit">Create Subcategory</button>
+        <button type="button" (click)="closeCreateSubcategoryModal()">
+          Cancel
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 

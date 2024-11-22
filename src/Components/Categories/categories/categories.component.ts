@@ -42,6 +42,21 @@ export class CategoriesComponent implements OnInit {
     );
   }
 
+  currentPage: number = 1;
+  itemsPerPage: number = 8;
+
+  // Compute the total number of pages
+  get totalPages(): number {
+    return Math.ceil(this.categories.length / this.itemsPerPage);
+  }
+
+  // Get the categories to display on the current page
+  get paginatedCategories(): Category[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.categories.slice(startIndex, endIndex);
+  }
+
   addCategory(): void {
     console.log('Add Category card clicked');
   }

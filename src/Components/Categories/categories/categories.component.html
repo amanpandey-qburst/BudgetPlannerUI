@@ -1,8 +1,7 @@
 <div class="category-container">
-  <!-- Existing categories -->
   <div
     class="category-card"
-    *ngFor="let category of categories"
+    *ngFor="let category of paginatedCategories"
     (click)="navigateToCategoryDetails(category)"
   >
     <h3>{{ category.name }}</h3>
@@ -12,6 +11,22 @@
   <div class="category-card add-category-card" (click)="openAddCategoryPopup()">
     <h3>+ Add Category</h3>
   </div>
+</div>
+
+<div class="pagination-controls">
+  <button
+    (click)="currentPage = currentPage - 1"
+    [disabled]="currentPage === 1"
+  >
+    Previous
+  </button>
+  <span>Page {{ currentPage }} of {{ totalPages }}</span>
+  <button
+    (click)="currentPage = currentPage + 1"
+    [disabled]="currentPage === totalPages"
+  >
+    Next
+  </button>
 </div>
 <div class="modal" *ngIf="isAddCategoryPopupOpen">
   <div class="modal-content">
