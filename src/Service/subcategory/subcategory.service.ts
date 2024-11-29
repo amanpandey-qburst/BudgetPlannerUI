@@ -22,6 +22,12 @@ export class SubcategoryService {
     return this.http.get(`${this.baseUrl}/category/${categoryId}`);
   }
 
+  editSubCategory(id: string, subCategoryDto: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, subCategoryDto, {
+      responseType: 'text',
+    });
+  }
+
   deleteSubCategory(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`, { responseType: 'text' });
   }

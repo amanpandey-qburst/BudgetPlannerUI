@@ -10,16 +10,32 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './category-detail.component.html',
-  styleUrl: './category-detail.component.css',
+  styleUrls: ['./category-detail.component.css'],
 })
 export class CategoryDetailComponent implements OnInit {
+  // Current category and its subcategories
   category: any;
-  isEditCategoryModalOpen = false;
-  isCreateSubcategoryModalOpen = false;
-  editCategoryData = { name: '', description: '' };
-  editSubcategoryData = { id: '', name: '', description: '' };
   subcategories: any[] = [];
+
+  // Modal states
+  isEditModalOpen = false;
+  isCreateSubcategoryModalOpen = false;
+  isConfirmDeleteModalOpen = false;
+
+  // Dynamic modal data
+  editData: { id: string; name: string; description: string } = {
+    id: '',
+    name: '',
+    description: '',
+  };
+  editType: 'category' | 'subcategory' = 'category';
+
+  // New subcategory form data
   newSubcategoryData = { name: '', description: '' };
+
+  // Confirm deletion
+  confirmMessage = '';
+  itemToDelete: { type: 'category' | 'subcategory'; id: string } | null = null;
 
   constructor(
     private categoryService: CategoryService,
@@ -31,12 +47,13 @@ export class CategoryDetailComponent implements OnInit {
     this.category = history.state.category;
     if (!this.category) {
       this.router.navigate(['home/categories']);
+    } else {
+      this.fetchSubcategories();
     }
-    this.fetchSubcategories();
   }
 
+  // Fetch subcategories for the current category
   fetchSubcategories(): void {
-    console.log('subcategori fetched');
     this.subcategoryService
       .getSubCategoriesByCategoryId(this.category.id)
       .subscribe(
@@ -45,50 +62,64 @@ export class CategoryDetailComponent implements OnInit {
         },
         (error) => {
           console.error('Error fetching subcategories:', error);
-          this.subcategories = []; // Ensure the array is empty on error
+          this.subcategories = []; // Reset subcategories on error
         }
       );
   }
 
-  openEditCategoryModal(): void {
-    this.editCategoryData.name = this.category.name;
-    this.editCategoryData.description = this.category.description;
-    this.isEditCategoryModalOpen = true;
+  // Open edit modal for category or subcategory
+  openEditModal(item: any, type: 'category' | 'subcategory'): void {
+    this.editType = type;
+    this.editData = {
+      id: item.id,
+      name: item.name,
+      description: item.description,
+    };
+    this.isEditModalOpen = true;
   }
 
-  closeEditCategoryModal(): void {
-    this.isEditCategoryModalOpen = false;
+  // Close the edit modal
+  closeEditModal(): void {
+    this.isEditModalOpen = false;
+    this.editData = { id: '', name: '', description: '' };
   }
 
-  submitEditCategory(): void {
-    if (this.category) {
-      const updatedCategory = { ...this.category, ...this.editCategoryData };
+  // Submit edit form for category or subcategory
+  submitEdit(): void {
+    if (this.editType === 'category') {
+      const updatedCategory = { ...this.category, ...this.editData };
       this.categoryService
         .updateCategory(updatedCategory.id, updatedCategory)
         .subscribe(
           () => {
             this.category = updatedCategory;
-            this.closeEditCategoryModal();
+            this.closeEditModal();
           },
           (error) => {
-            console.error('Error updating category', error);
+            console.error('Error updating category:', error);
+          }
+        );
+    } else if (this.editType === 'subcategory') {
+      this.subcategoryService
+        .editSubCategory(this.editData.id, this.editData)
+        .subscribe(
+          () => {
+            const index = this.subcategories.findIndex(
+              (s) => s.id === this.editData.id
+            );
+            if (index !== -1) {
+              this.subcategories[index] = { ...this.editData };
+            }
+            this.closeEditModal();
+          },
+          (error) => {
+            console.error('Error updating subcategory:', error);
           }
         );
     }
   }
 
-  deleteCategory(): void {
-    this.categoryService.deleteCategory(this.category.id).subscribe(
-      () => {
-        this.router.navigate(['home/categories']);
-      },
-      (error) => {
-        console.error('Error deleting category', error);
-      }
-    );
-  }
-
-  // Open modal to create new subcategory
+  // Open modal to create a new subcategory
   openCreateSubcategoryModal(): void {
     this.isCreateSubcategoryModalOpen = true;
     this.newSubcategoryData = { name: '', description: '' }; // Reset form
@@ -99,17 +130,16 @@ export class CategoryDetailComponent implements OnInit {
     this.isCreateSubcategoryModalOpen = false;
   }
 
-  // Submit create subcategory form
+  // Submit new subcategory creation
   submitCreateSubcategory(): void {
     const subcategoryToCreate = {
       ...this.newSubcategoryData,
-      categoryId: this.category.id, // Make sure to associate it with the current category
+      categoryId: this.category.id,
     };
-
     this.subcategoryService.createSubCategory(subcategoryToCreate).subscribe(
       (newSubcategory) => {
-        this.subcategories.push(newSubcategory); // Add the new subcategory to the list
-        this.closeCreateSubcategoryModal(); // Close modal
+        this.subcategories.push(newSubcategory);
+        this.closeCreateSubcategoryModal();
       },
       (error) => {
         console.error('Error creating subcategory:', error);
@@ -117,26 +147,7 @@ export class CategoryDetailComponent implements OnInit {
     );
   }
 
-  editSubcategory(subcategory: any): void {
-    this.editCategoryData.name = subcategory.name;
-    this.editCategoryData.description = subcategory.description;
-    this.isEditCategoryModalOpen = true;
-  }
-  deleteSubcategory(id: string): void {
-    this.subcategoryService.deleteSubCategory(id).subscribe(
-      () => {
-        this.fetchSubcategories(); // Re-fetch subcategories from the server
-      },
-      (error) => {
-        console.error('Error deleting subcategory:', error);
-      }
-    );
-  }
-
-  isConfirmDeleteModalOpen = false;
-  confirmMessage = '';
-  itemToDelete: { type: 'category' | 'subcategory'; id: string } | null = null;
-
+  // Confirm deletion modal
   openConfirmModal(itemType: 'category' | 'subcategory', id: string): void {
     this.isConfirmDeleteModalOpen = true;
     this.itemToDelete = { type: itemType, id };
@@ -151,6 +162,7 @@ export class CategoryDetailComponent implements OnInit {
     this.itemToDelete = null;
   }
 
+  // Perform deletion for category or subcategory
   confirmDeletion(): void {
     if (this.itemToDelete) {
       const { type, id } = this.itemToDelete;
@@ -161,7 +173,7 @@ export class CategoryDetailComponent implements OnInit {
             this.closeConfirmModal();
           },
           (error) => {
-            console.error('Error deleting category', error);
+            console.error('Error deleting category:', error);
           }
         );
       } else if (type === 'subcategory') {
@@ -171,7 +183,7 @@ export class CategoryDetailComponent implements OnInit {
             this.closeConfirmModal();
           },
           (error) => {
-            console.error('Error deleting subcategory', error);
+            console.error('Error deleting subcategory:', error);
           }
         );
       }
