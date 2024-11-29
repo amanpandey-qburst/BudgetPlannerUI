@@ -41,6 +41,27 @@
   color: white;
 }
 
+.create-subcategory-button {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.create-btn {
+  background-color: #2ea44f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.create-btn:hover {
+  background-color: #2c974b;
+}
+
 .card-container {
   display: flex;
   flex-wrap: wrap;

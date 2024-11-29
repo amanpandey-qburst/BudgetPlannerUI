@@ -17,6 +17,7 @@ export class CategoryDetailComponent implements OnInit {
   isEditCategoryModalOpen = false;
   isCreateSubcategoryModalOpen = false;
   editCategoryData = { name: '', description: '' };
+  editSubcategoryData = { id: '', name: '', description: '' };
   subcategories: any[] = [];
   newSubcategoryData = { name: '', description: '' };
 
@@ -35,6 +36,7 @@ export class CategoryDetailComponent implements OnInit {
   }
 
   fetchSubcategories(): void {
+    console.log('subcategori fetched');
     this.subcategoryService
       .getSubCategoriesByCategoryId(this.category.id)
       .subscribe(
@@ -123,12 +125,56 @@ export class CategoryDetailComponent implements OnInit {
   deleteSubcategory(id: string): void {
     this.subcategoryService.deleteSubCategory(id).subscribe(
       () => {
-        // Refresh the subcategories list after deletion
-        this.subcategories = this.subcategories.filter((s) => s.id !== id);
+        this.fetchSubcategories(); // Re-fetch subcategories from the server
       },
       (error) => {
         console.error('Error deleting subcategory:', error);
       }
     );
+  }
+
+  isConfirmDeleteModalOpen = false;
+  confirmMessage = '';
+  itemToDelete: { type: 'category' | 'subcategory'; id: string } | null = null;
+
+  openConfirmModal(itemType: 'category' | 'subcategory', id: string): void {
+    this.isConfirmDeleteModalOpen = true;
+    this.itemToDelete = { type: itemType, id };
+    this.confirmMessage =
+      itemType === 'category'
+        ? 'Are you sure you want to delete this category?'
+        : 'Are you sure you want to delete this subcategory?';
+  }
+
+  closeConfirmModal(): void {
+    this.isConfirmDeleteModalOpen = false;
+    this.itemToDelete = null;
+  }
+
+  confirmDeletion(): void {
+    if (this.itemToDelete) {
+      const { type, id } = this.itemToDelete;
+      if (type === 'category') {
+        this.categoryService.deleteCategory(id).subscribe(
+          () => {
+            this.router.navigate(['home/categories']);
+            this.closeConfirmModal();
+          },
+          (error) => {
+            console.error('Error deleting category', error);
+          }
+        );
+      } else if (type === 'subcategory') {
+        this.subcategoryService.deleteSubCategory(id).subscribe(
+          () => {
+            this.fetchSubcategories();
+            this.closeConfirmModal();
+          },
+          (error) => {
+            console.error('Error deleting subcategory', error);
+          }
+        );
+      }
+    }
   }
 }

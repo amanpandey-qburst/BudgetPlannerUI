@@ -1,40 +1,38 @@
-<!-- Category Detail Page -->
 <div class="category-detail-container">
-  <!-- Category Name and Description -->
   <h3>{{ category?.name }}</h3>
   <p>{{ category?.description }}</p>
 
-  <!-- Buttons Aligned to the Right -->
   <div class="action-buttons">
     <button (click)="openEditCategoryModal()">Edit</button>
-    <button (click)="deleteCategory()" class="delete-button">Delete</button>
+    <button
+      (click)="openConfirmModal('category', category.id)"
+      class="delete-button"
+    >
+      Delete
+    </button>
   </div>
 
-  <div class="create-subcategory-button">
-    <button (click)="openCreateSubcategoryModal()">Create Subcategory</button>
-  </div>
-
-  <!-- Subcategories Section -->
-  <!-- Subcategories Section -->
   <div class="subcategories-section">
     <h3>Subcategories</h3>
-
+    <div class="create-subcategory-button">
+      <button class="create-btn" (click)="openCreateSubcategoryModal()">
+        Create Subcategory
+      </button>
+    </div>
     <div
       class="card-container"
       *ngIf="subcategories.length > 0; else noSubcategoriesMessage"
     >
       <div class="subcategory-card" *ngFor="let subcategory of subcategories">
-        <!-- Subcategory Details -->
         <div class="subcategory-details">
           <h4>{{ subcategory.name }}</h4>
           <p>{{ subcategory.description }}</p>
         </div>
 
-        <!-- Action Buttons -->
         <div class="action-buttons">
           <button (click)="editSubcategory(subcategory)">Edit</button>
           <button
-            (click)="deleteSubcategory(subcategory.id)"
+            (click)="openConfirmModal('subcategory', subcategory.id)"
             class="delete-button"
           >
             Delete
@@ -43,14 +41,12 @@
       </div>
     </div>
 
-    <!-- Fallback message -->
     <ng-template #noSubcategoriesMessage>
       <p>There are currently no subcategories.</p>
     </ng-template>
   </div>
 </div>
 
-<!-- Create Subcategory Modal -->
 <div class="modal" *ngIf="isCreateSubcategoryModalOpen">
   <div class="modal-content">
     <h2>Create Subcategory</h2>
@@ -83,7 +79,6 @@
   </div>
 </div>
 
-<!-- Edit Category Modal -->
 <div class="modal" *ngIf="isEditCategoryModalOpen">
   <div class="modal-content">
     <h2>Edit Category</h2>
@@ -111,5 +106,16 @@
         <button type="button" (click)="closeEditCategoryModal()">Cancel</button>
       </div>
     </form>
+  </div>
+</div>
+
+<div class="modal" *ngIf="isConfirmDeleteModalOpen">
+  <div class="modal-content">
+    <h2>Confirm Deletion</h2>
+    <p>{{ confirmMessage }}</p>
+    <div class="modal-actions">
+      <button (click)="confirmDeletion()">Yes</button>
+      <button (click)="closeConfirmModal()">No</button>
+    </div>
   </div>
 </div>
