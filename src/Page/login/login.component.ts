@@ -52,6 +52,10 @@ export class LoginComponent {
       next: (response: any) => {
         console.log('API Response:', response);
 
+        if (response.token) {
+          sessionStorage.setItem('authToken', response.token);
+        }
+
         if (response.emailExist) {
           // Redirect to the home page if the email exists
           this.router.navigate(['/home']);

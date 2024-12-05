@@ -20,13 +20,17 @@ export interface CategoryCreateDto {
 })
 export class CategoryService {
   private apiUrl = 'https://localhost:7156/api/Category';
-  private addCategoryUrl = 'https://localhost:7156/api/Category';
 
   constructor(private http: HttpClient) {}
 
   // Get all categories
   getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(this.apiUrl);
+    const token = sessionStorage.getItem('authToken');
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    return this.http.get<Category[]>(this.apiUrl, { headers });
   }
 
   // Add a new category
