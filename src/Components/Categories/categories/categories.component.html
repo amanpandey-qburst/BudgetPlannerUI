@@ -1,11 +1,35 @@
+<div class="search-pagination-bar">
+  <input
+    type="text"
+    [(ngModel)]="searchQuery"
+    placeholder="Search categories..."
+    class="search-input"
+  />
+  <div class="pagination-controls">
+    <button
+      (click)="currentPage = currentPage - 1"
+      [disabled]="currentPage === 1"
+    >
+      Previous
+    </button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button
+      (click)="currentPage = currentPage + 1"
+      [disabled]="currentPage === totalPages"
+    >
+      Next
+    </button>
+  </div>
+</div>
+
 <div class="category-container">
   <div
     class="category-card"
     *ngFor="let category of paginatedCategories"
     (click)="navigateToCategoryDetails(category)"
   >
-    <h3>{{ category.name }}</h3>
-    <p>{{ category.description }}</p>
+    <h3>{{ category.name | truncate : 20 }}</h3>
+    <p>{{ category.description | truncate : 45 }}</p>
   </div>
 
   <div class="category-card add-category-card" (click)="openAddCategoryPopup()">
@@ -13,21 +37,6 @@
   </div>
 </div>
 
-<div class="pagination-controls">
-  <button
-    (click)="currentPage = currentPage - 1"
-    [disabled]="currentPage === 1"
-  >
-    Previous
-  </button>
-  <span>Page {{ currentPage }} of {{ totalPages }}</span>
-  <button
-    (click)="currentPage = currentPage + 1"
-    [disabled]="currentPage === totalPages"
-  >
-    Next
-  </button>
-</div>
 <div class="modal" *ngIf="isAddCategoryPopupOpen">
   <div class="modal-content">
     <h2>Add New Category</h2>
