@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AdminplanService } from '../../../Service/adminplan/adminplan.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-plans',
@@ -19,7 +20,7 @@ export class PlansComponent implements OnInit {
   isAddPlanPopupOpen: boolean = false;
   newPlan: any = { name: '', minimumIncome: 0 };
 
-  constructor(private planService: AdminplanService) {}
+  constructor(private planService: AdminplanService, private router: Router) {}
 
   ngOnInit() {
     this.getPlans();
@@ -52,7 +53,7 @@ export class PlansComponent implements OnInit {
 
   // Navigate to the plan details page
   navigateToPlanDetails(plan: any) {
-    console.log('Navigate to details of', plan);
+    this.router.navigate(['home/plandetails'], { state: { plan } });
   }
 
   openAddPlanPopup() {
@@ -66,7 +67,7 @@ export class PlansComponent implements OnInit {
   submitPlan() {
     this.planService.addPlan(this.newPlan).subscribe(() => {
       this.closeAddPlanPopup();
-      this.getPlans(); // Refresh the plan list after adding
+      this.getPlans();
     });
   }
 

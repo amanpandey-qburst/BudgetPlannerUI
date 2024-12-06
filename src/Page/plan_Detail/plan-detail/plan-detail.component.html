@@ -1,0 +1,14 @@
+<div *ngIf="plan">
+  <h2>{{ plan.name }}</h2>
+  <p>Minimum Income: {{ plan.minimumIncome }}</p>
+  <p>Basic Plan: {{ plan.isBasic ? "Yes" : "No" }}</p>
+  <p>Status: {{ plan.isActive ? "Active" : "Inactive" }}</p>
+
+  <h3>Categories:</h3>
+  <ul>
+    <li *ngFor="let category of plan.categories">
+      <strong>{{ category.categoryName }}</strong
+      >: {{ category.allocationPercentage }}%
+    </li>
+  </ul>
+</div>

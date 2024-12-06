@@ -17,9 +17,9 @@ import { TruncatePipe } from '../../../Pipe/truncate.pipe';
   styleUrls: ['./categories.component.css'],
 })
 export class CategoriesComponent implements OnInit {
-  searchQuery: string = ''; // For search input
-  categories: Category[] = []; // Complete list of categories
-  isAddCategoryPopupOpen = false; // Add category popup state
+  searchQuery: string = ''; 
+  categories: Category[] = []; 
+  isAddCategoryPopupOpen = false; 
   newCategory: Category = {
     id: '',
     name: '',
@@ -28,8 +28,8 @@ export class CategoriesComponent implements OnInit {
     isDeleted: false,
   };
 
-  currentPage: number = 1; // Current page for pagination
-  itemsPerPage: number = 8; // Number of items per page
+  currentPage: number = 1; 
+  itemsPerPage: number = 8; 
 
   constructor(
     private categoryService: CategoryService,
