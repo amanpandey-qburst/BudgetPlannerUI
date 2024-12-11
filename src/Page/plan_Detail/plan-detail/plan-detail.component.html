@@ -1,14 +1,61 @@
-<div *ngIf="plan">
-  <h2>{{ plan.name }}</h2>
-  <p>Minimum Income: {{ plan.minimumIncome }}</p>
-  <p>Basic Plan: {{ plan.isBasic ? "Yes" : "No" }}</p>
-  <p>Status: {{ plan.isActive ? "Active" : "Inactive" }}</p>
+<div *ngIf="plan" class="plan-detail-container">
+  <div class="plan-header">
+    <h2 class="plan-title">{{ plan.name }}</h2>
+    <div class="plan-actions">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="toggleEditMode()"
+        *ngIf="!isEditing"
+      >
+        Edit
+      </button>
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="deletePlan()"
+        *ngIf="!isEditing"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
 
-  <h3>Categories:</h3>
-  <ul>
-    <li *ngFor="let category of plan.categories">
-      <strong>{{ category.categoryName }}</strong
-      >: {{ category.allocationPercentage }}%
-    </li>
-  </ul>
+  <div class="plan-info">
+    <p><strong>Minimum Income:</strong> {{ plan.minimumIncome }}</p>
+    <p><strong>Basic Plan:</strong> {{ plan.isBasic ? "Yes" : "No" }}</p>
+    <p><strong>Status:</strong> {{ plan.isActive ? "Active" : "Inactive" }}</p>
+  </div>
+
+  <h3 class="section-title">Categories</h3>
+  <div class="categories-container">
+    <div class="category-card" *ngFor="let category of plan.categories">
+      <h4>{{ category.categoryName }}</h4>
+      <div *ngIf="isEditing; else viewMode">
+        <input
+          type="range"
+          id="percentage"
+          min="0"
+          max="100"
+          [(ngModel)]="category.allocationPercentage"
+          name="percentage"
+        />
+
+        <div class="slider-value">
+          Allocation: {{ category.allocationPercentage }}%
+        </div>
+      </div>
+
+      <ng-template #viewMode>
+        <p>Allocation: {{ category.allocationPercentage }}%</p>
+      </ng-template>
+    </div>
+  </div>
+
+  <div *ngIf="isEditing" class="save-actions">
+    <button mat-raised-button color="accent" (click)="saveChanges()">
+      Save
+    </button>
+    <button mat-raised-button (click)="cancelEdit()">Cancel</button>
+  </div>
 </div>

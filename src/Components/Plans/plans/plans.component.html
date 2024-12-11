@@ -32,7 +32,7 @@
     (click)="navigateToPlanDetails(plan)"
   >
     <h3>{{ plan.name }}</h3>
-    <p>₹{{ plan.minimumIncome }}</p>
+    <p>Minimium Income: ₹{{ plan.minimumIncome }}</p>
     <p>Status: {{ plan.isActive ? "Active" : "Inactive" }}</p>
   </div>
 
@@ -42,21 +42,23 @@
   </div>
 </div>
 
-<!-- Add New Plan Modal -->
-<div class="modal" *ngIf="isAddPlanPopupOpen">
+<!-- Modal Popup for Add Plan -->
+<div *ngIf="isAddPlanPopupOpen" class="modal">
   <div class="modal-content">
     <h2>Add New Plan</h2>
+
+    <!-- New Plan Form -->
     <form (ngSubmit)="submitPlan()">
-      <label for="name">Plan Name</label>
+      <label for="planName">Plan Name:</label>
       <input
         type="text"
-        id="name"
+        id="planName"
         [(ngModel)]="newPlan.name"
         name="name"
         required
       />
 
-      <label for="minimumIncome">Minimum Income</label>
+      <label for="minimumIncome">Minimum Income:</label>
       <input
         type="number"
         id="minimumIncome"
@@ -65,8 +67,41 @@
         required
       />
 
+      <h4>Available Categories</h4>
+      <ul>
+        <li *ngFor="let category of availableCategories">
+          <span>{{ category.name }}</span>
+          <button type="button" (click)="addCategoryToPlan(category)">
+            Add
+          </button>
+        </li>
+      </ul>
+
+      <h4>Selected Categories</h4>
+      <ul>
+        <li *ngFor="let category of selectedCategories; let i = index">
+          <span>{{ category.name }}</span>
+          <input
+            type="number"
+            [(ngModel)]="category.percentage"
+            name="percentage-{{ i }}"
+            min="0"
+            max="100"
+            required
+            placeholder="Percentage"
+          />
+          <button type="button" (click)="removeCategoryFromPlan(i)">
+            Remove
+          </button>
+        </li>
+      </ul>
+
+      <p>Total Percentage: {{ totalPercentage }}%</p>
+
       <div class="modal-actions">
-        <button type="submit">Add</button>
+        <button type="submit" [disabled]="totalPercentage !== 100">
+          Submit Plan
+        </button>
         <button type="button" (click)="closeAddPlanPopup()">Cancel</button>
       </div>
     </form>

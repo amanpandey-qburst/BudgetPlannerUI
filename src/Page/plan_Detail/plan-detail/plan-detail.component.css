@@ -1,0 +1,90 @@
+/* Main Container */
+.plan-detail-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+/* Header Section */
+.plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.plan-title {
+  font-size: 1.8rem;
+  color: #2c3e50;
+}
+
+.plan-actions button {
+  margin-left: 10px;
+}
+
+/* Plan Information */
+.plan-info {
+  margin-bottom: 20px;
+  font-size: 1rem;
+  color: #7f8c8d;
+}
+
+/* Categories Section */
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #34495e;
+  text-align: center;
+}
+
+.categories-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.category-card {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.category-card h4 {
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+
+.category-card p {
+  margin: 10px 0;
+  font-size: 1rem;
+  color: #7f8c8d;
+}
+
+.mat-slider {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.delete-category-btn {
+  margin-top: 10px;
+  align-self: center;
+}
+
+.save-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.slider {
+  width: 100%;
+}

@@ -17,9 +17,9 @@ import { TruncatePipe } from '../../../Pipe/truncate.pipe';
   styleUrls: ['./categories.component.css'],
 })
 export class CategoriesComponent implements OnInit {
-  searchQuery: string = ''; 
-  categories: Category[] = []; 
-  isAddCategoryPopupOpen = false; 
+  searchQuery: string = '';
+  categories: Category[] = [];
+  isAddCategoryPopupOpen = false;
   newCategory: Category = {
     id: '',
     name: '',
@@ -28,8 +28,8 @@ export class CategoriesComponent implements OnInit {
     isDeleted: false,
   };
 
-  currentPage: number = 1; 
-  itemsPerPage: number = 8; 
+  currentPage: number = 1;
+  itemsPerPage: number = 8;
 
   constructor(
     private categoryService: CategoryService,
@@ -37,7 +37,6 @@ export class CategoriesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Fetch categories from API
     this.categoryService.getCategories().subscribe(
       (data) => {
         this.categories = data;
@@ -48,44 +47,37 @@ export class CategoriesComponent implements OnInit {
     );
   }
 
-  // Compute total pages based on filtered results
   get totalPages(): number {
     return Math.ceil(this.filteredCategories.length / this.itemsPerPage);
   }
 
-  // Filter categories based on search query
   get filteredCategories(): Category[] {
     if (!this.searchQuery.trim()) {
-      return this.categories; // Return original if no search query
+      return this.categories;
     }
     return this.categories.filter((category) =>
       category.name.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
 
-  // Paginate filtered categories
   get paginatedCategories(): Category[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     return this.filteredCategories.slice(startIndex, endIndex);
   }
 
-  // Open the add category popup
   openAddCategoryPopup(): void {
     this.isAddCategoryPopupOpen = true;
   }
 
-  // Close the add category popup
   closeAddCategoryPopup(): void {
     this.isAddCategoryPopupOpen = false;
   }
 
-  // Navigate to category details
   navigateToCategoryDetails(category: any): void {
     this.router.navigate(['home/categorydetails'], { state: { category } });
   }
 
-  // Submit new category to API
   submitCategory(): void {
     const newCategoryData: CategoryCreateDto = {
       name: this.newCategory.name,
@@ -94,8 +86,8 @@ export class CategoriesComponent implements OnInit {
 
     this.categoryService.addCategory(newCategoryData).subscribe(
       (response) => {
-        this.categories.push(response); // Add new category locally
-        this.closeAddCategoryPopup(); // Close the popup
+        this.categories.push(response);
+        this.closeAddCategoryPopup();
       },
       (error) => {
         console.error('Error adding category', error);

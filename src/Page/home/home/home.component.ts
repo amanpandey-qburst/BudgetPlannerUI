@@ -21,18 +21,16 @@ export class HomeComponent {
 
   setActive(menu: string): void {
     this.activeMenu = menu;
-    this.navigateTo(menu); // Call your existing navigation logic
+    this.navigateTo(menu);
   }
 
-  // Function to handle logout
   logout() {
     this.userDataService.clearUserData();
     this.socialAuthService.signOut();
-    this.router.navigate(['/login']); // Redirect to login
+    this.router.navigate(['/login']);
   }
 
-  // Function to handle navigation based on the passed route
   navigateTo(route: string) {
-    this.router.navigate([`/home/${route}`]); // Navigate to route
+    this.router.navigate([`/home/${route}`]);
   }
 }
