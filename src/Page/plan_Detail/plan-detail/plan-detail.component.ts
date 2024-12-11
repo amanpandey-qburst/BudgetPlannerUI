@@ -2,14 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminplanService } from '../../../Service/adminplan/adminplan.service';
 import { CommonModule } from '@angular/common';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-plan-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatButtonModule, MatSliderModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './plan-detail.component.html',
   styleUrls: ['./plan-detail.component.css'],
 })
