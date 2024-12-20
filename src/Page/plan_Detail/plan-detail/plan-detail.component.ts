@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class PlanDetailComponent implements OnInit {
   plan: any;
   isEditing: boolean = false; // Tracks edit mode
+  errorMessage: string = '';
 
   constructor(private router: Router, private planService: AdminplanService) {}
 
@@ -36,19 +37,57 @@ export class PlanDetailComponent implements OnInit {
 
   toggleEditMode() {
     this.isEditing = true;
+    this.errorMessage = ''; // Clear any previous validation errors
+    console.log('Edit mode enabled:', this.isEditing);
+  }
+
+  validateAllocations(): boolean {
+    const totalPercentage = this.plan.categories.reduce(
+      (sum: number, category: any) => sum + category.allocationPercentage,
+      0
+    );
+    if (totalPercentage !== 100) {
+      this.errorMessage =
+        'Total allocation percentage for categories must equal 100%.';
+      return false;
+    }
+    return true;
   }
 
   saveChanges() {
-    // this.planService.updatePlan(this.plan).subscribe(
-    //   (response) => {
-    //     console.log('Plan updated successfully:', response);
-    //     this.isEditing = false; // Exit edit mode
-    //   },
-    //   (error) => {
-    //     console.error('Error saving changes:', error);
-    //   }
-    // );
+    console.log('clicked saveChanges');
+    if (!this.validateAllocations()) {
+      return; // Abort saving if validation fails
+    }
+
+    // Map categories to expected format for the API
+    const categoriesToSend = this.plan.categories.map((category: any) => ({
+      id: category.categoryId, // Category ID for API
+      percentage: category.allocationPercentage, // Percentage for API
+    }));
+
+    // Prepare the updated plan object to send to the API
+    const updatedPlan = {
+      name: this.plan.name,
+      minimumIncome: this.plan.minimumIncome,
+      categories: categoriesToSend, // Send the transformed categories
+    };
+
+    this.planService.updatePlan(this.plan.id, updatedPlan).subscribe(
+      (response) => {
+        console.log('Plan updated successfully:', response);
+        this.isEditing = false; // Exit edit mode
+        this.errorMessage = ''; // Clear validation errors
+      },
+      (error) => {
+        console.error('Error saving changes:', error);
+        this.errorMessage = 'Failed to save changes. Please try again.';
+      }
+    );
+
+    this.isEditing = false;
   }
+
 
   cancelEdit() {
     this.planService.getPlanDetails(this.plan.id).subscribe((data) => {
@@ -58,15 +97,16 @@ export class PlanDetailComponent implements OnInit {
   }
 
   deletePlan() {
-    // this.planService.deletePlan(this.plan.id).subscribe(
-    //   () => {
-    //     console.log('Plan deleted successfully');
-    //     this.router.navigate(['home/plans']);
-    //   },
-    //   (error) => {
-    //     console.error('Error deleting plan:', error);
-    //   }
-    // );
+    this.planService.deletePlan(this.plan.id).subscribe(
+      (response) => {
+        console.log('Plan and categories deleted successfully:', response);
+        this.router.navigate(['home/plans']);
+      },
+      (error) => {
+        console.error('Error deleting plan:', error);
+        this.errorMessage = 'Failed to delete the plan. Please try again.';
+      }
+    );
   }
 
   deleteCategory(category: any) {

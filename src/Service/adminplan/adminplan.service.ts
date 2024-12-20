@@ -21,4 +21,14 @@ export class AdminplanService {
   getPlanDetails(planId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${planId}`);
   }
+
+  updatePlan(id: string, plan: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, plan);
+  }
+
+  deletePlan(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+  
+
 }

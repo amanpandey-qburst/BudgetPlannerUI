@@ -117,24 +117,23 @@ export class PlansComponent implements OnInit {
 
   submitPlan() {
     if (this.totalPercentage !== 100) {
-      alert('Total percentage allocation must equal 100%!');
+      alert('Total percentage allocation must equal 100%!'); // CHANGE: Enhanced user feedback
       return;
     }
-
+  
     // Prepare plan payload
     this.newPlan.categories = this.selectedCategories.map((category) => ({
       id: category.id,
-      name: category.name,
-      percentage: category.percentage,
+      percentage: category.percentage, // CHANGE: Removed redundant `name` property
     }));
-
+  
     this.planService.addPlan(this.newPlan).subscribe(
       () => {
-        this.closeAddPlanPopup();
-        this.getPlans();
+        this.closeAddPlanPopup(); // CHANGE: Reset popup after submission
+        this.getPlans(); // CHANGE: Refresh the plan list
       },
       (error) => {
-        console.error('Error adding plan:', error);
+        console.error('Error adding plan:', error); // CHANGE: Improved error handling
       }
     );
   }

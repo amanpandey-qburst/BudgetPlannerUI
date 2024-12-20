@@ -53,9 +53,7 @@
   </div>
 
   <div *ngIf="isEditing" class="save-actions">
-    <button mat-raised-button color="accent" (click)="saveChanges()">
-      Save
-    </button>
-    <button mat-raised-button (click)="cancelEdit()">Cancel</button>
+    <button (click)="saveChanges()">Save</button>
+    <button (click)="cancelEdit()">Cancel</button>
   </div>
 </div>
