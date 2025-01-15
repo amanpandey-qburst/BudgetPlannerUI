@@ -2,7 +2,7 @@
   <button class="hamburger">☰</button>
   <div class="navbar-brand">Expense Tracker</div>
   <div class="navbar-menu">
-    <span class="username">Hello, Aman</span>
+    <span class="username">Hello, {{ firstName }} {{ lastName }}</span>
     <button class="logout-btn" (click)="logout()">Logout</button>
   </div>
 </div>
@@ -10,25 +10,13 @@
 <div class="container">
   <div class="sidebar">
     <ul>
-      <li>
+      <!-- Render admin menu items if the user is an admin -->
+      <li *ngFor="let item of (isAdmin ? adminMenuItems : nonAdminMenuItems)">
         <a
-          (click)="setActive('dashboard')"
-          [class.active]="activeMenu === 'dashboard'"
+          (click)="setActive(item.route)"
+          [class.active]="activeMenu === item.route"
         >
-          Dashboard
-        </a>
-      </li>
-      <li>
-        <a
-          (click)="setActive('categories')"
-          [class.active]="activeMenu === 'categories'"
-        >
-          Categories
-        </a>
-      </li>
-      <li>
-        <a (click)="setActive('plans')" [class.active]="activeMenu === 'plans'">
-          Plans
+          {{ item.label }}
         </a>
       </li>
     </ul>

@@ -33,15 +33,14 @@
       <h4>{{ category.categoryName }}</h4>
       <div *ngIf="isEditing; else viewMode">
         <input
-          type="range"
-          id="percentage"
+          type="number"
           min="0"
           max="100"
           [(ngModel)]="category.allocationPercentage"
           name="percentage"
         />
 
-        <div class="slider-value">
+        <div class="text-box-value">
           Allocation: {{ category.allocationPercentage }}%
         </div>
       </div>
@@ -50,6 +49,10 @@
         <p>Allocation: {{ category.allocationPercentage }}%</p>
       </ng-template>
     </div>
+  </div>
+
+  <div *ngIf="isEditing" class="total-percentage">
+    <p><strong>Total Allocation:</strong> {{ getTotalPercentage() }}%</p>
   </div>
 
   <div *ngIf="isEditing" class="save-actions">

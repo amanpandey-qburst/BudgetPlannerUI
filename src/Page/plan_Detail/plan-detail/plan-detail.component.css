@@ -88,3 +88,10 @@
 .slider {
   width: 100%;
 }
+
+
+.total-percentage {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #ff5722; /* Highlight the total in a noticeable color */
+}

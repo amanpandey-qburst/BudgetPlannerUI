@@ -11,7 +11,7 @@ interface Category {
   description: string;
   isBasic: boolean;
   isDeleted: boolean;
-  percentage?: number; // For plans where percentages are allocated
+  percentage?: number; 
 }
 
 @Component({
@@ -24,9 +24,9 @@ interface Category {
 export class PlansComponent implements OnInit {
   plans: any[] = [];
   filteredPlans: any[] = [];
-  categories: Category[] = []; // Holds fetched categories
-  availableCategories: Category[] = []; // Categories available for selection
-  selectedCategories: Category[] = []; // Categories added to the new plan
+  categories: Category[] = []; 
+  availableCategories: Category[] = []; 
+  selectedCategories: Category[] = []; 
   searchQuery: string = '';
   currentPage: number = 1;
   totalPages: number = 1;
@@ -41,7 +41,7 @@ export class PlansComponent implements OnInit {
 
   ngOnInit() {
     this.getPlans();
-    this.fetchCategories(); // Fetch categories when the component loads
+    this.fetchCategories(); 
   }
 
   getPlans() {
@@ -61,7 +61,7 @@ export class PlansComponent implements OnInit {
     this.categoryService.getCategories().subscribe(
       (data: Category[]) => {
         this.categories = data;
-        this.availableCategories = [...this.categories]; // Copy categories for selection
+        this.availableCategories = [...this.categories]; 
       },
       (error) => {
         console.error('Error fetching categories:', error);
@@ -93,9 +93,8 @@ export class PlansComponent implements OnInit {
   }
 
   addCategoryToPlan(category: Category) {
-    // Add category to the selected list with a default percentage of 0
     this.selectedCategories.push({ ...category, percentage: 0 });
-    // Remove from available categories
+
     this.availableCategories = this.availableCategories.filter(
       (cat) => cat.id !== category.id
     );
@@ -116,24 +115,19 @@ export class PlansComponent implements OnInit {
   }
 
   submitPlan() {
-    if (this.totalPercentage !== 100) {
-      alert('Total percentage allocation must equal 100%!'); // CHANGE: Enhanced user feedback
-      return;
-    }
-  
-    // Prepare plan payload
+
     this.newPlan.categories = this.selectedCategories.map((category) => ({
       id: category.id,
-      percentage: category.percentage, // CHANGE: Removed redundant `name` property
+      percentage: category.percentage, 
     }));
   
     this.planService.addPlan(this.newPlan).subscribe(
       () => {
-        this.closeAddPlanPopup(); // CHANGE: Reset popup after submission
-        this.getPlans(); // CHANGE: Refresh the plan list
+        this.closeAddPlanPopup();
+        this.getPlans(); 
       },
       (error) => {
-        console.error('Error adding plan:', error); // CHANGE: Improved error handling
+        console.error('Error adding plan:', error); 
       }
     );
   }

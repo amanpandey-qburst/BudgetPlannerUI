@@ -69,9 +69,9 @@
 
       <h4>Available Categories</h4>
       <ul>
-        <li *ngFor="let category of availableCategories">
+        <li *ngFor="let category of availableCategories" class="category-item">
           <span>{{ category.name }}</span>
-          <button type="button" (click)="addCategoryToPlan(category)">
+          <button type="button" class="btn-add" (click)="addCategoryToPlan(category)">
             Add
           </button>
         </li>
@@ -90,7 +90,7 @@
             required
             placeholder="Percentage"
           />
-          <button type="button" (click)="removeCategoryFromPlan(i)">
+          <button type="button" class="btn-remove" (click)="removeCategoryFromPlan(i)">
             Remove
           </button>
         </li>

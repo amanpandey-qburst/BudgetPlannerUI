@@ -1,10 +1,7 @@
-import {
-  GoogleSigninButtonModule,
-  SocialAuthService,
-} from '@abacritt/angularx-social-login';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { GoogleSigninButtonModule, SocialAuthService } from '@abacritt/angularx-social-login';
+import { LoginService } from '../../Service/login/login.service';
 import { UserDataService } from '../../Service/userData/user-data.service';
 
 @Component({
@@ -17,8 +14,8 @@ import { UserDataService } from '../../Service/userData/user-data.service';
 export class LoginComponent {
   socialAuthService = inject(SocialAuthService);
   router = inject(Router);
+  loginService = inject(LoginService);
   userDataService = inject(UserDataService);
-  http = inject(HttpClient); // Injecting HttpClient
 
   ngOnInit() {
     this.socialAuthService.authState.subscribe({
@@ -35,37 +32,31 @@ export class LoginComponent {
           email: result.email,
         });
 
-        // Call the API to check if the user exists by email
-        this.checkUserEmail(result.email);
+        // Call checkUserEmail via LoginService
+        this.loginService.checkUserEmail(result.email).subscribe({
+          next: (response: any) => {
+            console.log('API Response:', response);
+
+            if (response.token) {
+              sessionStorage.setItem('authToken', response.token);
+            }
+
+         
+     
+
+            if (response.emailExist) {
+              this.router.navigate(['/home']);
+            } else {
+              this.router.navigate(['/registration']);
+            }
+          },
+          error: (err) => {
+            console.error('Error calling API:', err);
+          },
+        });
       },
       error: (err) => {
         console.log(err);
-      },
-    });
-  }
-
-  checkUserEmail(email: string) {
-    console.log('email check', email);
-    const apiUrl = `https://localhost:7156/api/User/getUserWithEmail?email=${email}`;
-
-    this.http.get(apiUrl).subscribe({
-      next: (response: any) => {
-        console.log('API Response:', response);
-
-        if (response.token) {
-          sessionStorage.setItem('authToken', response.token);
-        }
-
-        if (response.emailExist) {
-          // Redirect to the home page if the email exists
-          this.router.navigate(['/home']);
-        } else {
-          // Redirect to the registration page if the email doesn't exist
-          this.router.navigate(['/registration']);
-        }
-      },
-      error: (err) => {
-        console.log('Error calling API:', err);
       },
     });
   }

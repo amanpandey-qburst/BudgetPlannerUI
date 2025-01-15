@@ -177,3 +177,60 @@
   background-color: #dc3545;
   color: white;
 }
+
+
+.category-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.category-item span {
+  flex: 1;
+}
+
+.btn-add {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-add:hover {
+  background-color: #0056b3;
+}
+
+.btn-add:focus {
+  outline: none;
+  box-shadow: 0 0 3px #0056b3;
+}
+
+.btn-remove {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-remove:hover {
+  background-color: #e60000;
+}
+
+.btn-remove:focus {
+  outline: none;
+  box-shadow: 0 0 3px #e60000;
+}
+

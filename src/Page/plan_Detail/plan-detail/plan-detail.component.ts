@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class PlanDetailComponent implements OnInit {
   plan: any;
-  isEditing: boolean = false; // Tracks edit mode
+  isEditing: boolean = false; 
   errorMessage: string = '';
 
   constructor(private router: Router, private planService: AdminplanService) {}
@@ -53,6 +53,14 @@ export class PlanDetailComponent implements OnInit {
     }
     return true;
   }
+
+  getTotalPercentage(): number {
+    return this.plan.categories.reduce(
+      (sum: number, category: any) => sum + category.allocationPercentage,
+      0
+    );
+  }
+  
 
   saveChanges() {
     console.log('clicked saveChanges');
