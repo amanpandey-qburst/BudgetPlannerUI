@@ -1,0 +1,136 @@
+.dashboard {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  height: 90vh;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.dashboard-container {
+  display: flex;
+  gap: 20px;
+}
+
+.left-section {
+  flex: 1;
+  min-width: 300px;
+  max-width: 600px;
+  padding: 10px;
+}
+
+.chart {
+  text-align: center;
+}
+
+canvas {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.financial-summary {
+  margin-top: 20px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.financial-summary h5 {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.financial-summary p {
+  margin: 10px 0;
+  font-size: 1rem;
+  color: #495057;
+}
+
+.right-section {
+  flex: 2;
+  min-width: 350px;
+  padding: 10px;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+ 
+  overflow-y: auto;
+}
+
+.category-card {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-left: 10px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.category-card:hover {
+  border-left: 5px solid #007bff; /* Highlight color on hover */
+  transform: translateY(-5px);
+}
+
+.category-card h3 {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.category-card p {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: #495057;
+}
+
+.category-grid::-webkit-scrollbar {
+  width: 10px;
+}
+
+.category-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.category-grid::-webkit-scrollbar-thumb {
+  background: #9aa6b2;
+  border-radius: 10px;
+}
+
+.category-grid::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+      flex-direction: column;
+  }
+
+  .left-section {
+      flex: 1;
+      min-width: 100%;
+  }
+
+  .right-section {
+      flex: 1;
+      min-width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .category-card h3 {
+      font-size: 1.1em;
+  }
+
+  .category-card p {
+      font-size: 0.9em;
+  }
+}

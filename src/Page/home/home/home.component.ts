@@ -26,8 +26,9 @@ export class HomeComponent {
   ];
 
   nonAdminMenuItems = [
-    { label: 'Categories', route: 'categories' },
-    { label: 'Plans', route: 'plans' },
+    { label: 'Plan', route: 'user-dashboard' },
+    { label: 'Expense', route: 'expense' },
+    { label: 'Profile', route: 'profile' },
   ];
 
 
@@ -44,8 +45,15 @@ export class HomeComponent {
   this.lastName = this.loginService.getLastName();
     this.isAdmin = this.loginService.getIsAdmin();
 
-    console.log('isAdmin:', this.isAdmin);
-    console.log('Menu items:', this.isAdmin ? this.adminMenuItems : this.nonAdminMenuItems);
+    const defaultRoute = this.getDefaultMenuRoute(); 
+    this.activeMenu = defaultRoute;
+    this.router.navigate([`/home/${defaultRoute}`]); 
+
+  }
+
+  getDefaultMenuRoute(): string {
+    const menu = this.isAdmin ? this.adminMenuItems : this.nonAdminMenuItems;
+    return menu[0].route; 
   }
 
   setActive(menu: string): void {

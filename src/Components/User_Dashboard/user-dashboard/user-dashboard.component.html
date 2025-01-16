@@ -1,0 +1,39 @@
+<div class="dashboard">
+    <!-- <h3>{{ planName }} Plan</h3> -->
+    <div class="dashboard-container">
+      <!-- Left Section: Pie Chart & Financial Summary -->
+      <div class="left-section">
+        <div class="chart">
+          <h3>Budget Allocation</h3>
+          <canvas id="pieChart"></canvas>
+        </div>
+        <div class="financial-summary">
+          <h5>Financial Summary</h5>
+          <p><strong>Income this month:</strong> ₹{{ userIncome }}</p>
+          <p><strong>Total Expenditure:</strong> ₹{{ totalExpenditure }}</p>
+          <p><strong>Remaining Money:</strong> ₹{{ remainingMoney }}</p>
+        </div>
+      </div>
+  
+      <!-- Right Section: Categories -->
+      <div class="right-section">
+        <h3>Categories</h3>
+        <div class="category-grid">
+          <div
+            class="category-card"
+            *ngFor="let category of categories"
+            [style.borderColor]="category.color"
+          >
+            <h3>{{ category.name }}</h3>
+            <p>Allocation: {{ category.allocation }}%</p>
+            <p>Spent: ₹{{ category.spent }}</p>
+            <p>
+              Remaining: ₹
+              {{ ((category.allocation / 100) * userIncome - category.spent).toFixed(2) }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

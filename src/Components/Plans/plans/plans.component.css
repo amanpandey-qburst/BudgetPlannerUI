@@ -90,6 +90,13 @@
   color: #f8f9fa;
 }
 
+.plan-card:hover,
+.add-plan-card:hover {
+  transform: scale(1.02); 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
+}
+
+
 @media (max-width: 768px) {
   .plan-card {
     flex: 1 1 100%;

@@ -8,6 +8,9 @@ import { CategoriesComponent } from '../Components/Categories/categories/categor
 import { PlansComponent } from '../Components/Plans/plans/plans.component';
 import { CategoryDetailComponent } from '../Page/category_Detail/category-detail/category-detail.component';
 import { PlanDetailComponent } from '../Page/plan_Detail/plan-detail/plan-detail.component';
+import { UserDashboardComponent } from '../Components/User_Dashboard/user-dashboard/user-dashboard.component';
+import { ExpenseComponent } from '../Components/Expense/expense/expense.component';
+import { ProfileComponent } from '../Components/Profile/profile/profile.component';
 
 export const routes: Routes = [
   { path: 'registration', component: RegistrationComponent },
@@ -21,7 +24,10 @@ export const routes: Routes = [
       { path: 'plans', component: PlansComponent },
       { path: 'categorydetails', component: CategoryDetailComponent },
       { path: 'plandetails', component: PlanDetailComponent },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default child route
+      { path: 'user-dashboard', component: UserDashboardComponent },
+      { path: 'expense', component: ExpenseComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, 
     ],
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },

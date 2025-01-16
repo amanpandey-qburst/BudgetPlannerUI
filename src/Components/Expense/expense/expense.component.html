@@ -1,1 +1,50 @@
-<p>expense works!</p>
+<div class="expense-container">
+    <div class="header">
+      <h2>Expenses</h2>
+      <button class="add-expense-button" (click)="openAddExpenseModal()">+ Add Expense</button>
+    </div>
+  
+    <!-- Recent Expenses Table -->
+    <div class="expense-table">
+      <div class="table-header">
+        <div class="column">Expense Name</div>
+        <div class="column">Amount</div>
+        <div class="column">Date</div>
+      </div>
+  
+      <div class="table-body" *ngIf="expenses.length > 0; else noExpenses">
+        <div class="table-row" *ngFor="let expense of expenses">
+          <div class="column">{{ expense.expenseName }}</div>
+          <div class="column">{{ expense.amount | currency }}</div>
+          <div class="column">{{ expense.createdDate | date: 'short' }}</div>
+        </div>
+      </div>
+    </div>
+  
+    <ng-template #noExpenses>
+      <p class="no-expenses">No expenses found.</p>
+    </ng-template>
+  
+    <!-- Add Expense Modal -->
+    <div class="modal" *ngIf="isModalOpen">
+      <div class="modal-content">
+        <h3>Add New Expense</h3>
+        <form>
+          <label>Expense Name:</label>
+          <input type="text" [(ngModel)]="newExpense.expenseName" placeholder="Enter expense name" />
+  
+          <label>Amount:</label>
+          <input type="number" [(ngModel)]="newExpense.amount" placeholder="Enter amount" />
+  
+          <label>SubCategory ID:</label>
+          <input type="text" [(ngModel)]="newExpense.subCategoryId" placeholder="Enter subcategory ID" />
+  
+          <div class="modal-actions">
+            <button type="button" class="add-button" (click)="addExpense()">Add</button>
+            <button type="button" class="cancel-button" (click)="closeModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

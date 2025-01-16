@@ -10,6 +10,7 @@ export class LoginService {
   private isAdmin: boolean = false;
   private firstName: string = '';
   private lastName: string = '';
+  private token: string | null = null;
 
   constructor(private http: HttpClient) {}
 
@@ -25,36 +26,37 @@ export class LoginService {
     return this.lastName;
   }
 
-  // Fetch data from the API and set user properties
+  getToken(): string | null {
+    return this.token;
+  }
+
   checkUserEmail(email: string): Observable<any> {
     const apiUrl = `https://localhost:7156/api/User/getUserWithEmail?email=${email}`;
+    
     return new Observable((subscriber) => {
       this.http.get(apiUrl).subscribe({
         next: (response: any) => {
           if (response.emailExist) {
-            // Set the user details directly here
-            const decodedToken: any = jwtDecode(response.token);
-            this.firstName = response.user.firstName;
-            this.lastName = response.user.lastName;
-            this.isAdmin = decodedToken.isAdmin === 'True';
-
-            console.log('LoginService: User details set:', {
-              firstName: this.firstName,
-              lastName: this.lastName,
-              isAdmin: this.isAdmin,
-            });
-
-            subscriber.next(response);
+            // Decode and set user details
+            if (response.token) {
+              const decodedToken: any = jwtDecode(response.token);
+              this.firstName = response.user.firstName;
+              this.lastName = response.user.lastName;
+              this.isAdmin = decodedToken.isAdmin === 'True';
+              this.token = response.token;
+            }
+            subscriber.next(response); // Pass response to the subscriber
           } else {
-            console.warn('LoginService: Email not found in API response');
-            subscriber.error('Email does not exist');
+            // Email does not exist, still pass the response for the caller to handle
+            subscriber.next(response);
           }
         },
         error: (err) => {
           console.error('LoginService: Error while calling API:', err);
-          subscriber.error(err);
+          subscriber.error(err); // Pass API call error to the subscriber
         },
       });
     });
   }
+  
 }
