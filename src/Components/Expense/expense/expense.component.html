@@ -4,26 +4,25 @@
       <button class="add-expense-button" (click)="openAddExpenseModal()">+ Add Expense</button>
     </div>
   
-    <!-- Recent Expenses Table -->
-    <div class="expense-table">
-      <div class="table-header">
-        <div class="column">Expense Name</div>
-        <div class="column">Amount</div>
-        <div class="column">Date</div>
-      </div>
-  
-      <div class="table-body" *ngIf="expenses.length > 0; else noExpenses">
-        <div class="table-row" *ngFor="let expense of expenses">
-          <div class="column">{{ expense.expenseName }}</div>
-          <div class="column">{{ expense.amount | currency }}</div>
-          <div class="column">{{ expense.createdDate | date: 'short' }}</div>
-        </div>
-      </div>
-    </div>
-  
-    <ng-template #noExpenses>
-      <p class="no-expenses">No expenses found.</p>
-    </ng-template>
+    <!-- Table for displaying expenses -->
+    <table class="expense-table">
+      <thead>
+        <tr>
+          <th>Expense Name</th>
+          <th>Amount</th>
+          <th>Category</th>
+          <th>Created Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let expense of expenses">
+          <td>{{ expense.expenseName }}</td>
+          <td>{{ expense.amount | currency: 'INR'  }}</td>
+          <td>{{ expense.subCategoryName || 'N/A' }}</td>
+          <td>{{ expense.createdDate | date: 'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
   
     <!-- Add Expense Modal -->
     <div class="modal" *ngIf="isModalOpen">
@@ -31,13 +30,40 @@
         <h3>Add New Expense</h3>
         <form>
           <label>Expense Name:</label>
-          <input type="text" [(ngModel)]="newExpense.expenseName" placeholder="Enter expense name" />
+          <input
+            type="text"
+            [(ngModel)]="newExpense.expenseName"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Enter expense name"
+          />
   
           <label>Amount:</label>
-          <input type="number" [(ngModel)]="newExpense.amount" placeholder="Enter amount" />
+          <input
+            type="number"
+            [(ngModel)]="newExpense.amount"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Enter amount"
+          />
   
-          <label>SubCategory ID:</label>
-          <input type="text" [(ngModel)]="newExpense.subCategoryId" placeholder="Enter subcategory ID" />
+          <label>SubCategory:</label>
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            [ngModelOptions]="{ standalone: true }"
+            (input)="onSearchTextChanged()"
+            placeholder="Search subcategories"
+          />
+          <div class="dropdown">
+            <div
+              *ngFor="let category of filteredSubCategories"
+              class="dropdown-item"
+              (click)="selectSubCategory(category.id, category.name)"
+            >
+              {{ category.name }}
+            </div>
+          </div>
+  
+          <p *ngIf="selectedSubCategory">Selected: {{ selectedSubCategory }}</p>
   
           <div class="modal-actions">
             <button type="button" class="add-button" (click)="addExpense()">Add</button>

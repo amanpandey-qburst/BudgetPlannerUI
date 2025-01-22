@@ -9,8 +9,8 @@ import { PlansComponent } from '../Components/Plans/plans/plans.component';
 import { CategoryDetailComponent } from '../Page/category_Detail/category-detail/category-detail.component';
 import { PlanDetailComponent } from '../Page/plan_Detail/plan-detail/plan-detail.component';
 import { UserDashboardComponent } from '../Components/User_Dashboard/user-dashboard/user-dashboard.component';
-import { ExpenseComponent } from '../Components/Expense/expense/expense.component';
 import { ProfileComponent } from '../Components/Profile/profile/profile.component';
+import { ExpenseComponent } from '../Components/Expense/expense/expense.component';
 
 export const routes: Routes = [
   { path: 'registration', component: RegistrationComponent },
