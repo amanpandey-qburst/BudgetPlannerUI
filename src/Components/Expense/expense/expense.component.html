@@ -15,9 +15,12 @@
         </tr>
       </thead>
       <tbody>
+        <tr *ngIf="!expenses || expenses.length === 0">
+          <td colspan="4" class="no-expense-message">No expenses to display</td>
+        </tr>
         <tr *ngFor="let expense of expenses">
           <td>{{ expense.expenseName }}</td>
-          <td>{{ expense.amount | currency: 'INR'  }}</td>
+          <td>{{ expense.amount | currency: 'INR' }}</td>
           <td>{{ expense.subCategoryName || 'N/A' }}</td>
           <td>{{ expense.createdDate | date: 'short' }}</td>
         </tr>

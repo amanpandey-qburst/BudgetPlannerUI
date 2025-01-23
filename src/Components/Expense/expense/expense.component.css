@@ -59,6 +59,13 @@
     color: #999;
     margin-top: 20px;
   }
+
+  .no-expense-message {
+    text-align: center;
+    font-style: italic;
+    color: gray;
+  }
+  
   
   /* Modal Styling */
   .modal {

@@ -1,1 +1,77 @@
-<p>profile works!</p>
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="avatar-container">
+        <img [src]="user.photoURL" alt="User Photo" class="avatar" />
+      </div>
+      <div class="user-info">
+        <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+        <p>{{ user.emailId }}</p>
+        <p><strong>Gender:</strong> {{ user.gender }}</p>
+        <p><strong>Date of Birth:</strong> {{ user.dateOfBirth | date }}</p>
+  
+        <!-- Edit Button -->
+        <button (click)="toggleEditMode()">{{ isEditMode ? 'Cancel' : 'Edit' }}</button>
+      </div>
+    </div>
+  
+    <!-- Editable Profile Form -->
+    <div *ngIf="isEditMode" class="edit-profile-form">
+      <div>
+        <label for="firstName">First Name</label>
+        <input [(ngModel)]="user.firstName" id="firstName" placeholder="Enter first name" />
+      </div>
+      <div>
+        <label for="lastName">Last Name</label>
+        <input [(ngModel)]="user.lastName" id="lastName" placeholder="Enter last name" />
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input [(ngModel)]="user.emailId" id="email" placeholder="Enter email" />
+      </div>
+      <div>
+        <label for="dob">Date of Birth</label>
+        <input [(ngModel)]="user.dateOfBirth" id="dob" type="date" />
+      </div>
+      <div>
+        <label for="gender">Gender</label>
+        <select [(ngModel)]="user.gender" id="gender">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+  
+    <!-- Income Section -->
+    <div class="incomes-section">
+      <h3>Incomes</h3>
+  
+      <!-- Add New Income Form (Visible in Edit Mode) -->
+      <div *ngIf="isEditMode">
+        <div>
+          <label for="source">Income Source</label>
+          <input [(ngModel)]="newIncome.source" id="source" placeholder="Enter income source" />
+        </div>
+        <div>
+          <label for="amount">Amount</label>
+          <input [(ngModel)]="newIncome.amount" id="amount" type="number" placeholder="Enter amount" />
+        </div>
+        <button (click)="addIncome()">Add Income</button>
+      </div>
+  
+      <!-- Display Income List -->
+      <div class="income" *ngFor="let income of user.incomes">
+        <div class="income-details">
+          <span class="source">{{ income.source }}</span>
+          <span class="amount">{{ income.amount | currency: 'INR' }}</span>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Save Button (Visible in Edit Mode) -->
+    <div *ngIf="isEditMode">
+      <button (click)="saveChanges()">Save Changes</button>
+    </div>
+  </div>
+  

@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-import { LoginService } from '../login/login.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +10,7 @@ export class ExpenseService {
   private addExpenseUrl = 'https://localhost:7156/api/UserPlan/add-expense';
   private getExpensesUrl = 'https://localhost:7156/api/UserPlan/get-expenses';
 
-  constructor(private http: HttpClient, private loginService: LoginService) {}
+  constructor(private http: HttpClient) {}
 
   // Fetch subcategories
   getSubCategories(): Observable<any[]> {
@@ -20,7 +19,7 @@ export class ExpenseService {
 
   // Add an expense
   addExpense(expense: any): Observable<any> {
-    const token = this.loginService.getToken();
+    const token = sessionStorage.getItem('authToken');
     if (!token) {
       return throwError(() => new Error('Token not available'));
     }
@@ -39,7 +38,7 @@ export class ExpenseService {
 
   // Get all expenses for the logged-in user
   getExpenses(): Observable<any[]> {
-    const token = this.loginService.getToken();
+    const token = sessionStorage.getItem('authToken');
     if (!token) {
       return throwError(() => new Error('Token not available'));
     }

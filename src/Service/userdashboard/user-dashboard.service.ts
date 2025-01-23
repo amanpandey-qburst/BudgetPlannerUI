@@ -8,13 +8,13 @@ import { Observable } from 'rxjs';
 })
 export class UserDashboardService {
 
-  private apiUrl = 'https://localhost:7156/api/UserPlan/dashboard'; // Update with actual API endpoint
+  private apiUrl = 'https://localhost:7156/api/UserPlan/dashboard'; 
 
   constructor(private http: HttpClient, private loginService: LoginService) {}
 
   // Method to get user data
   getUserPlanDetails(): Observable<any> {
-    const token = this.loginService.getToken(); // Retrieve token from LoginService
+    const token = sessionStorage.getItem('authToken');
     if (!token) {
       throw new Error('Token not available');
     }
