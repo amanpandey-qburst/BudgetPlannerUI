@@ -1,1 +1,35 @@
-<p>admin-dashboard works!</p>
+<div class="dashboard-container">
+    <!-- Button Section for Date Range -->
+    <div class="button-group">
+      <button class="btn" (click)="updateChart(3)">Last 3 Days</button>
+      <button class="btn" (click)="updateChart(7)">Last 7 Days</button>
+      <button class="btn" (click)="updateChart(15)">Last 15 Days</button>
+      <button class="btn" (click)="updateChart(30)">Last 30 Days</button>
+    </div>
+  
+    <!-- Chart Section -->
+    <div class="chart-container">
+      <canvas id="barChart"></canvas>
+    </div>
+
+    <div class="expenses-table">
+        <h3>Expenses Summary</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Total Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let expense of expensesData">
+              <td>{{ expense.categoryName }}</td>
+              <td>₹{{ expense.totalAmount  }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    
+  </div>
+  

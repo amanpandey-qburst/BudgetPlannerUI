@@ -15,9 +15,12 @@
         </div>
       </div>
   
-      <!-- Right Section: Categories -->
+
       <div class="right-section">
-        <h3>Categories</h3>
+        <div class="categories-header">
+          <h3>Categories</h3>
+          <button class="edit-btn" (click)="editCategories()">Edit Categories</button>
+        </div>
         <div class="category-grid">
           <div
             class="category-card"
@@ -34,6 +37,78 @@
           </div>
         </div>
       </div>
+
+     
+      
+
+      <div class="modal" [class.show]="isEditModalOpen">
+        <div class="modal-content">
+          <h3>Edit Categories</h3>
+      
+          <!-- Search bar -->
+          <label>Search Categories:</label>
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            (input)="onSearchTextChanged()"
+            placeholder="Search categories"
+          />
+      
+          <!-- Dropdown for selecting categories -->
+          <div class="dropdown">
+            <div
+              *ngFor="let category of existingselectedCategories"
+              class="dropdown-item"
+              (click)="selectCategory(category)"
+            >
+              {{ category.name }}
+            </div>
+          </div>
+          
+          
+      
+          <div class="selected-categories-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category Name</th>
+                  <th>Allocation (%)</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+            </table>
+            <div class="scrollable-table">
+              <table>
+                <tbody>
+                  <tr *ngFor="let category of existingselectedCategories; let i = index">
+                    <td>{{ category.name }}</td>
+                    <td>
+                      <input
+                        type="number"
+                        [(ngModel)]="category.allocation"
+                        placeholder="Allocation (%)"
+                      />
+                    </td>
+                    <td>
+                      <button (click)="removeCategory(i)">Remove</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Modal actions -->
+          <div class="modal-actions">
+            <button (click)="saveChanges()">Save</button>
+            <button (click)="closeModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+      
+
+       
+      
     </div>
   </div>
   

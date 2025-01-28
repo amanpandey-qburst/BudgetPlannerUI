@@ -2,22 +2,30 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { UserDashboardService } from '../../../Service/userdashboard/user-dashboard.service';
+import { FormsModule } from '@angular/forms';
+import { CategoryService } from '../../../Service/category/category.service';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css'],
 })
 export class UserDashboardComponent implements OnInit {
+  isEditModalOpen: boolean = false;
+  categories: any[] = [];
+  allCategories: any[] = []; 
+  existingselectedCategories: any[] = []; 
+  searchText: string = ''; 
+  remainingCategories: any[] = [];
+  totalAllocation: number = 0;
   planName: string = '';
   userIncome: number = 0;
   totalExpenditure: number = 0;
   remainingMoney: number = 0;
-  categories: any[] = [];
   predefinedColors = [
     '#FF6384',
     '#36A2EB',
@@ -28,11 +36,14 @@ export class UserDashboardComponent implements OnInit {
     '#C9CBCF',
   ];
   colors: string[] = [];
+  newCategory = { name: '', allocation: 0 }; 
 
-  constructor(private dashboardService: UserDashboardService) {}
+  constructor(private dashboardService: UserDashboardService, private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.fetchDashboardData();
+    this.fetchAllCategories();
+    this.filterRemainingCategories();
   }
 
   fetchDashboardData(): void {
@@ -46,11 +57,14 @@ export class UserDashboardComponent implements OnInit {
 
         // Map allocations to categories
         this.categories = response.allocations.map((allocation: any, index: number) => ({
+          categoryID: allocation.categoryId,
           name: allocation.categoryName,
           allocation: allocation.allocation,
           spent: allocation.expense,
           color: this.getCategoryColor(index),
         }));
+
+        this.existingselectedCategories = [...this.categories]; 
 
         // Render the chart
         this.renderPieChart();
@@ -61,8 +75,8 @@ export class UserDashboardComponent implements OnInit {
     );
   }
 
+
   getCategoryColor(index: number): string {
-    // Use predefined colors, and generate additional colors if necessary
     if (index < this.predefinedColors.length) {
       return this.predefinedColors[index];
     }
@@ -101,4 +115,128 @@ export class UserDashboardComponent implements OnInit {
       },
     });
   }
+
+
+  fetchAllCategories(): void {
+    this.categoryService.getCategories().subscribe(
+      (categories) => {
+        this.allCategories = categories.map((cat: any) => ({
+          id: cat.id,
+          name: cat.name,
+        }));
+       
+      },
+      (error) => console.error('Error fetching categories:', error)
+    );
+  }
+
+  filterRemainingCategories(): void {
+    this.remainingCategories = this.allCategories.filter(
+      (category) =>
+        !this.existingselectedCategories.some(
+          (selected) => selected.categoryID === category.id
+        )
+    );
+  
+    console.log('Remaining Categories:', this.remainingCategories);
+  }
+  
+  
+
+
+
+
+
+  
+  
+
+  onSearchTextChanged(): void {
+    this.allCategories = this.allCategories.filter((cat) =>
+      cat.name.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+
+    console.log(this.allCategories);
+  }
+
+  selectCategory(category: any): void {
+    const alreadySelected = this.existingselectedCategories.find((c) => c.id === category.id);
+    if (!alreadySelected) {
+      this.existingselectedCategories.push({ ...category, allocation: 0 });
+    }
+  }
+  
+  
+
+
+
+  
+
+  filterCategories(): any[] {
+    if (!this.searchText.trim()) return this.allCategories;
+    return this.allCategories.filter((cat) =>
+      cat.name.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+  }
+
+  // selectCategory(categoryId: number, categoryName: string): void {
+  //   const existing = this.selectedCategories.find((cat) => cat.id === categoryId);
+  //   if (!existing) {
+  //     this.selectedCategories.push({
+  //       id: categoryId,
+  //       name: categoryName,
+  //       allocation: 0,
+  //     });
+  //   }
+  // }
+
+  
+
+  saveChanges(): void {
+    // this.totalAllocation = this.selectedCategories.reduce((sum, cat) => sum + cat.allocation, 0);
+    // if (this.totalAllocation > 100) {
+    //   alert('Total allocation cannot exceed 100%. Please adjust your categories.');
+    //   return;
+    // }
+
+    // // API logic to save categories (e.g., `dashboardService.updateCategories()`)
+    // console.log('Selected Categories:', this.selectedCategories);
+    // this.isEditModalOpen = false;
+  }
+
+  closeModal(): void {
+    this.isEditModalOpen = false;
+  }
+
+  
+  editCategories(): void {
+    this.isEditModalOpen = true;
+    console.log(this.categories);
+    console.log(this.existingselectedCategories);
+    console.log(this.allCategories);
+    console.log(this.remainingCategories);
+  }
+
+
+  addCategory(): void {
+    if (this.newCategory.name && this.newCategory.allocation > 0) {
+      const newCategory = {
+        ...this.newCategory,
+        spent: 0,
+        color: this.getCategoryColor(this.categories.length),
+      };
+      this.categories.push(newCategory);
+      this.newCategory = { name: '', allocation: 0 }; // Reset input fields
+    } else {
+      alert('Please fill in both the category name and allocation.');
+    }
+  }
+
+  removeCategory(index: number): void {
+    this.categories.splice(index, 1);
+  }
+
+  
+
+
+
 }

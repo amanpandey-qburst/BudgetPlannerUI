@@ -1,0 +1,124 @@
+/* General Layout for the dashboard */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Button Styling */
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .btn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+  }
+  
+  .btn:focus {
+    outline: none;
+  }
+  
+  /* Chart Container */
+  .chart-container {
+    width: 100%;
+    height: 500px;
+    max-width: 1200px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .button-group {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .btn {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+    }
+  
+    .chart-container {
+      height: 400px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .btn {
+      width: 100%;
+      font-size: 14px;
+      padding: 10px;
+    }
+  
+    .chart-container {
+      height: 350px;
+    }
+  }
+  
+
+  .expenses-table {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .expenses-table h3 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+  }
+  
+  table th, table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  table th {
+    background-color: #f2f2f2;
+  }
+  
+  table td {
+    background-color: #fff;
+  }
+  
+  table tr:nth-child(even) td {
+    background-color: #f9f9f9;
+  }
+  
+  table tr:hover td {
+    background-color: #e9e9e9;
+  }
