@@ -1,79 +1,128 @@
 <div class="expense-container">
-    <div class="header">
-      <h2>Expenses</h2>
-      <button class="add-expense-button" (click)="openAddExpenseModal()">+ Add Expense</button>
-    </div>
-  
-    <!-- Table for displaying expenses -->
-    <table class="expense-table">
-      <thead>
-        <tr>
-          <th>Expense Name</th>
-          <th>Amount</th>
-          <th>Category</th>
-          <th>Created Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngIf="!expenses || expenses.length === 0">
-          <td colspan="4" class="no-expense-message">No expenses to display</td>
-        </tr>
-        <tr *ngFor="let expense of expenses">
-          <td>{{ expense.expenseName }}</td>
-          <td>{{ expense.amount | currency: 'INR' }}</td>
-          <td>{{ expense.subCategoryName || 'N/A' }}</td>
-          <td>{{ expense.createdDate | date: 'short' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  
-    <!-- Add Expense Modal -->
-    <div class="modal" *ngIf="isModalOpen">
-      <div class="modal-content">
-        <h3>Add New Expense</h3>
-        <form>
-          <label>Expense Name:</label>
-          <input
-            type="text"
-            [(ngModel)]="newExpense.expenseName"
-            [ngModelOptions]="{ standalone: true }"
-            placeholder="Enter expense name"
-          />
-  
-          <label>Amount:</label>
-          <input
-            type="number"
-            [(ngModel)]="newExpense.amount"
-            [ngModelOptions]="{ standalone: true }"
-            placeholder="Enter amount"
-          />
-  
-          <label>SubCategory:</label>
-          <input
-            type="text"
-            [(ngModel)]="searchText"
-            [ngModelOptions]="{ standalone: true }"
-            (input)="onSearchTextChanged()"
-            placeholder="Search subcategories"
-          />
-          <div class="dropdown">
-            <div
-              *ngFor="let category of filteredSubCategories"
-              class="dropdown-item"
-              (click)="selectSubCategory(category.id, category.name)"
-            >
-              {{ category.name }}
+  <div class="header">
+    <h2>Expenses</h2>
+    <button class="add-expense-button" (click)="openAddExpenseModal()">+ Add Expense</button>
+  </div>
+
+  <table class="expense-table">
+    <thead>
+      <tr>
+        <th (click)="sortExpenses('expenseName')">
+          Expense Name <span [innerHTML]="getSortIcon('expenseName')"></span>
+        </th>
+        <th (click)="sortExpenses('amount')">
+          Amount <span [innerHTML]="getSortIcon('amount')"></span>
+        </th>
+        <th (click)="sortExpenses('subCategoryName')">
+          Category <span [innerHTML]="getSortIcon('subCategoryName')"></span>
+        </th>
+        <th (click)="sortExpenses('createdDate')">
+          Created Date <span [innerHTML]="getSortIcon('createdDate')"></span>
+        </th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="!expenses || expenses.length === 0">
+        <td colspan="5" class="no-expense-message">No expenses to display</td>
+      </tr>
+      <tr *ngFor="let expense of expenses">
+        <td>{{ expense.expenseName }}</td>
+        <td>{{ expense.amount | currency: 'INR' }}</td>
+        <td>{{ expense.subCategoryName || 'N/A' }}</td>
+        <td>{{ expense.createdDate | date: 'short' }}</td>
+        <td class="action-column">
+          <div class="menu-container">
+            <button class="menu-button" (click)="toggleMenu(expense, $event)">⋮</button>
+            <div class="dropdown-menu" *ngIf="expense.showMenu">
+              <button (click)="openEditExpenseModal(expense)">Edit</button>
+              <button (click)="openDeleteConfirmation(expense)">Delete</button>
             </div>
           </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
   
-          <p *ngIf="selectedSubCategory">Selected: {{ selectedSubCategory }}</p>
-  
-          <div class="modal-actions">
-            <button type="button" class="add-button" (click)="addExpense()">Add</button>
-            <button type="button" class="cancel-button" (click)="closeModal()">Cancel</button>
+
+   <!-- Add Expense Modal -->
+   <div class="modal" *ngIf="isModalOpen">
+    <div class="modal-content">
+      <h3>Add New Expense</h3>
+      <form>
+        <label>Expense Name:</label>
+        <input
+          type="text"
+          [(ngModel)]="newExpense.expenseName"
+          [ngModelOptions]="{ standalone: true }"
+          placeholder="Enter expense name"
+        />
+
+        <label>Amount:</label>
+        <input
+          type="number"
+          [(ngModel)]="newExpense.amount"
+          [ngModelOptions]="{ standalone: true }"
+          placeholder="Enter amount"
+        />
+
+        <label>SubCategory:</label>
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          [ngModelOptions]="{ standalone: true }"
+          (input)="onSearchTextChanged()"
+          placeholder="Search subcategories"
+        />
+        <div class="dropdown">
+          <div
+            *ngFor="let category of filteredSubCategories"
+            class="dropdown-item"
+            (click)="selectSubCategory(category.id, category.name)"
+          >
+            {{ category.name }}
           </div>
-        </form>
+        </div>
+
+        <p *ngIf="selectedSubCategory">Selected: {{ selectedSubCategory }}</p>
+
+        <div class="modal-actions">
+          <button type="button" class="add-button" (click)="addExpense()">Add</button>
+          <button type="button" class="cancel-button" (click)="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Expense Modal -->
+  <div class="modal" *ngIf="isEditModalOpen">
+    <div class="modal-content">
+      <h3>Edit Expense</h3>
+      <form>
+        <label>Expense Name:</label>
+        <input type="text" [(ngModel)]="editableExpense.expenseName" [ngModelOptions]="{ standalone: true }" />
+
+
+        <label>Amount:</label>
+        <input type="number" [(ngModel)]="editableExpense.amount" [ngModelOptions]="{ standalone: true }" />
+
+
+        <div class="modal-actions">
+          <button type="button" class="add-button" (click)="updateExpense()">Save</button>
+          <button type="button" class="cancel-button" (click)="closeEditModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" *ngIf="isDeleteModalOpen">
+    <div class="modal-content">
+      <h3>Are you sure you want to delete this expense?</h3>
+      <div class="modal-actions">
+        <button class="add-button" (click)="deleteExpense()">Yes, Delete</button>
+        <button class="cancel-button" (click)="closeDeleteModal()">Cancel</button>
       </div>
     </div>
   </div>
-  
+</div>

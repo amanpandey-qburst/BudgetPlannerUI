@@ -19,8 +19,10 @@
       <div class="right-section">
         <div class="categories-header">
           <h3>Categories</h3>
-          <button class="edit-btn" (click)="editCategories()">Edit Categories</button>
+          <button class="edit-btn" (click)="openAllocationModal()">Adjust Allocation</button>
+          <button class="edit-btn" (click)="openManageCategoriesModal()">Manage Categories</button>
         </div>
+        
         <div class="category-grid">
           <div
             class="category-card"
@@ -41,38 +43,56 @@
      
       
 
-      <div class="modal" [class.show]="isEditModalOpen">
+
+      <div *ngIf="isAllocationModalOpen" class="modal show">
         <div class="modal-content">
-          <h3>Edit Categories</h3>
+          <h3>Adjust Allocation</h3>
+          <div class="selected-categories-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Allocation (%)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let category of categories">
+                  <td>{{ category.name }}</td>
+                  <td>
+                    <input type="number" [(ngModel)]="category.allocation" placeholder="Allocation (%)" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-actions">
+            <button (click)="saveAllocationChanges()">Save</button>
+            <button (click)="closeAllocationModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+
+      <div *ngIf="isManageCategoriesModalOpen" class="modal show">
+        <div class="modal-content">
+          <h3>Manage Categories</h3>
       
-          <!-- Search bar -->
+          <!-- Add Category -->
           <label>Search Categories:</label>
-          <input
-            type="text"
-            [(ngModel)]="searchText"
-            (input)="onSearchTextChanged()"
-            placeholder="Search categories"
-          />
+          <input type="text" [(ngModel)]="searchText" (input)="onSearchTextChanged()" placeholder="Search categories" />
       
-          <!-- Dropdown for selecting categories -->
           <div class="dropdown">
-            <div
-              *ngFor="let category of existingselectedCategories"
-              class="dropdown-item"
-              (click)="selectCategory(category)"
-            >
+            <div *ngFor="let category of allCategories" class="dropdown-item" (click)="addCategory(category)">
               {{ category.name }}
             </div>
           </div>
-          
-          
       
+          <!-- Selected Categories Table -->
           <div class="selected-categories-container">
             <table>
               <thead>
                 <tr>
                   <th>Category Name</th>
-                  <th>Allocation (%)</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -80,15 +100,8 @@
             <div class="scrollable-table">
               <table>
                 <tbody>
-                  <tr *ngFor="let category of existingselectedCategories; let i = index">
+                  <tr *ngFor="let category of categories; let i = index">
                     <td>{{ category.name }}</td>
-                    <td>
-                      <input
-                        type="number"
-                        [(ngModel)]="category.allocation"
-                        placeholder="Allocation (%)"
-                      />
-                    </td>
                     <td>
                       <button (click)="removeCategory(i)">Remove</button>
                     </td>
@@ -97,14 +110,14 @@
               </table>
             </div>
           </div>
-          
-          <!-- Modal actions -->
+      
           <div class="modal-actions">
-            <button (click)="saveChanges()">Save</button>
-            <button (click)="closeModal()">Cancel</button>
+            <button (click)="saveCategoryChanges()">Save</button>
+            <button (click)="closeManageCategoriesModal()">Cancel</button>
           </div>
         </div>
       </div>
+      
       
 
        

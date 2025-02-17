@@ -15,7 +15,8 @@ Chart.register(...registerables);
   styleUrls: ['./user-dashboard.component.css'],
 })
 export class UserDashboardComponent implements OnInit {
-  isEditModalOpen: boolean = false;
+  isAllocationModalOpen: boolean = false;
+  isManageCategoriesModalOpen: boolean = false;
   categories: any[] = [];
   allCategories: any[] = []; 
   existingselectedCategories: any[] = []; 
@@ -37,6 +38,7 @@ export class UserDashboardComponent implements OnInit {
   ];
   colors: string[] = [];
   newCategory = { name: '', allocation: 0 }; 
+ 
 
   constructor(private dashboardService: UserDashboardService, private categoryService: CategoryService) {}
 
@@ -137,17 +139,8 @@ export class UserDashboardComponent implements OnInit {
           (selected) => selected.categoryID === category.id
         )
     );
-  
     console.log('Remaining Categories:', this.remainingCategories);
   }
-  
-  
-
-
-
-
-
-  
   
 
   onSearchTextChanged(): void {
@@ -165,11 +158,6 @@ export class UserDashboardComponent implements OnInit {
     }
   }
   
-  
-
-
-
-  
 
   filterCategories(): any[] {
     if (!this.searchText.trim()) return this.allCategories;
@@ -178,64 +166,118 @@ export class UserDashboardComponent implements OnInit {
     );
   }
 
-  // selectCategory(categoryId: number, categoryName: string): void {
-  //   const existing = this.selectedCategories.find((cat) => cat.id === categoryId);
-  //   if (!existing) {
-  //     this.selectedCategories.push({
-  //       id: categoryId,
-  //       name: categoryName,
-  //       allocation: 0,
-  //     });
-  //   }
-  // }
+
+
 
   
-
-  saveChanges(): void {
-    // this.totalAllocation = this.selectedCategories.reduce((sum, cat) => sum + cat.allocation, 0);
-    // if (this.totalAllocation > 100) {
-    //   alert('Total allocation cannot exceed 100%. Please adjust your categories.');
-    //   return;
-    // }
-
-    // // API logic to save categories (e.g., `dashboardService.updateCategories()`)
-    // console.log('Selected Categories:', this.selectedCategories);
-    // this.isEditModalOpen = false;
+  openAllocationModal(): void {
+    this.isManageCategoriesModalOpen = false; // Close other modal
+    this.isAllocationModalOpen = true;
+    console.log("open allocartion");
   }
-
-  closeModal(): void {
-    this.isEditModalOpen = false;
-  }
-
   
-  editCategories(): void {
-    this.isEditModalOpen = true;
-    console.log(this.categories);
-    console.log(this.existingselectedCategories);
-    console.log(this.allCategories);
-    console.log(this.remainingCategories);
+  
+
+closeAllocationModal(): void {
+  this.isAllocationModalOpen = false;
+  console.log("hitallocation");
+}
+
+saveAllocationChanges(): void {
+  let totalAllocation = this.categories.reduce((sum, cat) => sum + cat.allocation, 0);
+  if (totalAllocation > 100) {
+      alert("Total allocation cannot exceed 100%");
+      return;
   }
 
+  const categoryAllocations = this.categories.map(category => ({
+    categoryId: category.categoryID,
+    allocation: category.allocation
+  }));
 
-  addCategory(): void {
-    if (this.newCategory.name && this.newCategory.allocation > 0) {
-      const newCategory = {
-        ...this.newCategory,
-        spent: 0,
-        color: this.getCategoryColor(this.categories.length),
-      };
-      this.categories.push(newCategory);
-      this.newCategory = { name: '', allocation: 0 }; // Reset input fields
-    } else {
-      alert('Please fill in both the category name and allocation.');
+  this.dashboardService.editCategoryAllocation("b42c484a-2305-4286-9959-160b39f1527e", categoryAllocations).subscribe(
+    () => {
+      alert("Allocations updated successfully!");
+      // Handle further UI updates like closing modals or refreshing data
+    },
+    (error) => {
+      console.error("Error updating allocations:", error);
     }
+  );
+}
+
+
+
+
+openManageCategoriesModal(): void {
+  this.isAllocationModalOpen = false; // Close other modal
+  this.isManageCategoriesModalOpen = true;
+  console.log("open mange");
+}
+
+closeManageCategoriesModal(): void {
+  this.isManageCategoriesModalOpen = false;
+  console.log("hitmanage");
+}
+
+// Add Category
+addCategory(category: any): void {
+  if (!this.categories.some((cat) => cat.categoryID === category.id)) {
+    this.categories.push({ ...category, allocation: 0, categoryID: category.id });
+    this.existingselectedCategories.push({ ...category, allocation: 0, categoryID: category.id });
+    this.filterRemainingCategories(); // Refilter remaining categories after adding
+  }
+}
+
+// Remove Category
+removeCategory(index: number): void {
+  // Get the category to be removed
+  const categoryToRemove = this.categories[index];
+
+  // Remove from the categories list (UI update)
+  this.categories.splice(index, 1);
+
+  // Remove from the selected category list (selectedCategoryIds)
+  const categoryIndex = this.existingselectedCategories.findIndex(
+    (cat) => cat.categoryID === categoryToRemove.categoryID
+  );
+  if (categoryIndex !== -1) {
+    this.existingselectedCategories.splice(categoryIndex, 1);
   }
 
-  removeCategory(index: number): void {
-    this.categories.splice(index, 1);
-  }
+  // Optionally, you could log to see the updated lists
+  console.log("Updated Categories List:", this.categories);
+  console.log("Updated Selected Categories List:", this.existingselectedCategories);
+}
 
-  
+
+// Save Changes to API
+saveCategoryChanges(): void {
+  // Find the current selected categories based on categoryID
+  const selectedCategoryIds = this.existingselectedCategories.map(cat => cat.categoryID);
+
+  // Compare with the categories array to check which ones are removed
+  const removedCategories = this.categories
+    .filter(cat => !selectedCategoryIds.includes(cat.categoryID))
+    .map(cat => cat.categoryID);
+
+  console.log('Selected Category IDs:', selectedCategoryIds);
+  console.log('Removed Categories:', removedCategories);
+
+  // Now only send the selected categories (added/remaining categories)
+  this.dashboardService.updateCategories("abfd7851-bfb7-44b8-9a91-de700aab888d", selectedCategoryIds).subscribe(
+    () => {
+      alert("Categories updated successfully!");
+      // Handle further UI updates like closing modals or refreshing data
+    },
+    (error) => {
+      console.error("Error updating categories:", error);
+    }
+  );
+}
+
+
+
 
 
 

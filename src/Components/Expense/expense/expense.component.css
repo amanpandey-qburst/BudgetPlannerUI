@@ -160,3 +160,63 @@
     background: #c82333;
   }
   
+
+  /* Ensure the action column is properly styled */
+.action-column {
+  position: relative;
+  width: 50px;
+  text-align: center;
+}
+
+/* Style for the three-dot button */
+.menu-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* Dropdown container */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  min-width: 100px;
+}
+
+/* Dropdown button styles */
+.dropdown-menu button {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Highlight on hover */
+.dropdown-menu button:hover {
+  background: #007bff;
+  color: white;
+}
+
+
+th {
+  cursor: pointer;
+  user-select: none;
+}
+
+th span {
+  margin-left: 5px;
+  font-size: 12px;
+  color: gray;
+}

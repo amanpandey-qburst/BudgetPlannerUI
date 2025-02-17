@@ -11,6 +11,10 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./expense.component.css'],
 })
 export class ExpenseComponent implements OnInit {
+  isEditModalOpen: boolean = false;
+  isDeleteModalOpen: boolean = false;
+  editableExpense: any = null;
+  selectedExpense: any = null;
   subCategories: any[] = []; // Full list of subcategories fetched from the API
   filteredSubCategories: any[] = []; // Filtered list based on search text
   expenses: any[] = []; // Expenses fetched from the API
@@ -22,6 +26,8 @@ export class ExpenseComponent implements OnInit {
   };
   searchText: string = ''; // Text input for filtering categories
   selectedSubCategory: string = ''; // Selected subcategory name
+  sortColumn: string = 'createdDate'; // Default sorting column
+  sortDirection: 'asc' | 'desc' = 'desc';
 
   constructor(private expenseService: ExpenseService) {}
 
@@ -72,6 +78,7 @@ export class ExpenseComponent implements OnInit {
 
   openAddExpenseModal(): void {
     this.isModalOpen = true;
+    console.log("hitttt modal");
   }
 
   closeModal(): void {
@@ -108,4 +115,99 @@ export class ExpenseComponent implements OnInit {
     this.searchText = '';
     this.filteredSubCategories = [...this.subCategories];
   }
+
+  toggleMenu(expense: any, event: Event): void {
+    event.stopPropagation(); // Prevents clicks from closing immediately
+  
+    this.expenses.forEach(e => {
+      if (e !== expense) e.showMenu = false; // Close other menus
+    });
+  
+    expense.showMenu = !expense.showMenu; // Toggle current menu
+  }
+  
+  openEditExpenseModal(expense: any): void {
+    this.editableExpense = { ...expense };
+    this.isEditModalOpen = true;
+    console.log("is edit modal open true");
+  }
+
+  closeEditModal(): void {
+    this.isEditModalOpen = false;
+    this.editableExpense = null;
+  }
+
+  updateExpense(): void {
+    // this.expenseService.updateExpense(this.editableExpense).subscribe({
+    //   next: () => {
+    //     const index = this.expenses.findIndex(e => e.id === this.editableExpense.id);
+    //     if (index !== -1) this.expenses[index] = { ...this.editableExpense };
+    //     this.closeEditModal();
+    //   },
+    //   error: () => alert('Failed to update expense'),
+    // });
+  }
+
+  openDeleteConfirmation(expense: any): void {
+    this.selectedExpense = expense;
+    this.isDeleteModalOpen = true;
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalOpen = false;
+    this.selectedExpense = null;
+  }
+
+  deleteExpense(): void {
+    // this.expenseService.deleteExpense(this.selectedExpense.id).subscribe({
+    //   next: () => {
+    //     this.expenses = this.expenses.filter(e => e.id !== this.selectedExpense.id);
+    //     this.closeDeleteModal();
+    //   },
+    //   error: () => alert('Failed to delete expense'),
+    // });
+  }
+
+
+
+
+sortExpenses(column: string): void {
+  if (this.sortColumn === column) {
+    // Toggle between ascending and descending
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+  } else {
+    // Set new column and default to ascending
+    this.sortColumn = column;
+    this.sortDirection = 'asc';
+  }
+
+  // Sorting logic
+  this.expenses.sort((a, b) => {
+    let valueA = a[column];
+    let valueB = b[column];
+
+    // Convert date to timestamp for comparison
+    if (column === 'createdDate') {
+      valueA = new Date(valueA).getTime();
+      valueB = new Date(valueB).getTime();
+    }
+
+    // Convert string to lowercase for case-insensitive sorting
+    if (typeof valueA === 'string' && typeof valueB === 'string') {
+      valueA = valueA.toLowerCase();
+      valueB = valueB.toLowerCase();
+    }
+
+    if (valueA < valueB) return this.sortDirection === 'asc' ? -1 : 1;
+    if (valueA > valueB) return this.sortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
+}
+
+// Function to display sorting arrows
+getSortIcon(column: string): string {
+  if (this.sortColumn !== column) return ''; 
+  return this.sortDirection === 'asc' ? '&#9650;' : '&#9660;'; 
+}
+
 }

@@ -28,7 +28,7 @@
     *ngFor="let category of paginatedCategories"
     (click)="navigateToCategoryDetails(category)"
   >
-    <h3>{{ category.name | truncate : 20 }}</h3>
+    <h3>{{ category.name | truncate : 40 }}</h3>
     <p>{{ category.description | truncate : 45 }}</p>
   </div>
 
