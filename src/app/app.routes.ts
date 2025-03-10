@@ -11,6 +11,7 @@ import { PlanDetailComponent } from '../Page/plan_Detail/plan-detail/plan-detail
 import { UserDashboardComponent } from '../Components/User_Dashboard/user-dashboard/user-dashboard.component';
 import { ProfileComponent } from '../Components/Profile/profile/profile.component';
 import { ExpenseComponent } from '../Components/Expense/expense/expense.component';
+import { ComparePlanComponent } from '../Components/Compare_Plan/compare-plan/compare-plan.component';
 
 export const routes: Routes = [
   { path: 'registration', component: RegistrationComponent },
@@ -27,6 +28,7 @@ export const routes: Routes = [
       { path: 'user-dashboard', component: UserDashboardComponent },
       { path: 'expense', component: ExpenseComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'compare-plan', component: ComparePlanComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, 
     ],
   },

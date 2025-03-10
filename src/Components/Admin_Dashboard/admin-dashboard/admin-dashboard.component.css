@@ -19,6 +19,36 @@
     justify-content: center;
     gap: 15px;
   }
+
+  .date-picker-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.date-picker-group input {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.date-picker-group .btn {
+    padding: 8px 15px;
+    font-size: 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.date-picker-group .btn:hover {
+    background-color: #218838;
+}
+
   
   .btn {
     padding: 10px 20px;

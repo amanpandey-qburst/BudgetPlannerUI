@@ -10,7 +10,7 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule ],
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css'],
 })
@@ -27,6 +27,7 @@ export class UserDashboardComponent implements OnInit {
   userIncome: number = 0;
   totalExpenditure: number = 0;
   remainingMoney: number = 0;
+  allocationError: string = '';
   predefinedColors = [
     '#FF6384',
     '#36A2EB',
@@ -38,6 +39,10 @@ export class UserDashboardComponent implements OnInit {
   ];
   colors: string[] = [];
   newCategory = { name: '', allocation: 0 }; 
+  selectedCategories: any[] = [];
+  availableCategories: any[] = [];
+  selectedSearch: string = '';
+  availableSearch: string = '';
  
 
   constructor(private dashboardService: UserDashboardService, private categoryService: CategoryService) {}
@@ -46,6 +51,7 @@ export class UserDashboardComponent implements OnInit {
     this.fetchDashboardData();
     this.fetchAllCategories();
     this.filterRemainingCategories();
+    this.fetchUserCategories();
   }
 
   fetchDashboardData(): void {
@@ -76,6 +82,19 @@ export class UserDashboardComponent implements OnInit {
       }
     );
   }
+
+  fetchUserCategories(): void {
+    this.dashboardService.getUserCategories().subscribe(
+      (response) => {
+        this.selectedCategories = response.selectedCategories;
+        this.availableCategories = response.availableCategories;
+      },
+      (error) => {
+        console.error('Error fetching user categories:', error);
+      }
+    );
+  }
+
 
 
   getCategoryColor(index: number): string {
@@ -159,12 +178,12 @@ export class UserDashboardComponent implements OnInit {
   }
   
 
-  filterCategories(): any[] {
-    if (!this.searchText.trim()) return this.allCategories;
-    return this.allCategories.filter((cat) =>
-      cat.name.toLowerCase().includes(this.searchText.toLowerCase())
-    );
-  }
+  // filterCategories(): any[] {
+  //   if (!this.searchText.trim()) return this.allCategories;
+  //   return this.allCategories.filter((cat) =>
+  //     cat.name.toLowerCase().includes(this.searchText.toLowerCase())
+  //   );
+  // }
 
 
 
@@ -173,7 +192,7 @@ export class UserDashboardComponent implements OnInit {
   openAllocationModal(): void {
     this.isManageCategoriesModalOpen = false; // Close other modal
     this.isAllocationModalOpen = true;
-    console.log("open allocartion");
+    this.updateTotalAllocation();
   }
   
   
@@ -183,19 +202,27 @@ closeAllocationModal(): void {
   console.log("hitallocation");
 }
 
+updateTotalAllocation(): void {
+  this.totalAllocation = this.categories.reduce((sum, cat) => sum + Number(cat.allocation || 0), 0);
+  this.allocationError = this.totalAllocation !== 100 ? "Total allocation must be exactly 100%" : "";
+}
+
 saveAllocationChanges(): void {
   let totalAllocation = this.categories.reduce((sum, cat) => sum + cat.allocation, 0);
-  if (totalAllocation > 100) {
-      alert("Total allocation cannot exceed 100%");
-      return;
-  }
+
+  if (totalAllocation !== 100) {
+    this.allocationError = "Total allocation must be exactly 100%";
+    return;
+}
+
+this.allocationError = '';
 
   const categoryAllocations = this.categories.map(category => ({
     categoryId: category.categoryID,
     allocation: category.allocation
   }));
 
-  this.dashboardService.editCategoryAllocation("b42c484a-2305-4286-9959-160b39f1527e", categoryAllocations).subscribe(
+  this.dashboardService.editCategoryAllocation("3a40f240-c29c-4a5e-bda2-aa558c4fdf61", categoryAllocations).subscribe(
     () => {
       alert("Allocations updated successfully!");
       // Handle further UI updates like closing modals or refreshing data
@@ -220,35 +247,35 @@ closeManageCategoriesModal(): void {
   console.log("hitmanage");
 }
 
-// Add Category
-addCategory(category: any): void {
-  if (!this.categories.some((cat) => cat.categoryID === category.id)) {
-    this.categories.push({ ...category, allocation: 0, categoryID: category.id });
-    this.existingselectedCategories.push({ ...category, allocation: 0, categoryID: category.id });
-    this.filterRemainingCategories(); // Refilter remaining categories after adding
-  }
-}
+// // Add Category
+// addCategory(category: any): void {
+//   if (!this.categories.some((cat) => cat.categoryID === category.id)) {
+//     this.categories.push({ ...category, allocation: 0, categoryID: category.id });
+//     this.existingselectedCategories.push({ ...category, allocation: 0, categoryID: category.id });
+//     this.filterRemainingCategories(); // Refilter remaining categories after adding
+//   }
+// }
 
-// Remove Category
-removeCategory(index: number): void {
-  // Get the category to be removed
-  const categoryToRemove = this.categories[index];
+// // Remove Category
+// removeCategory(index: number): void {
+//   // Get the category to be removed
+//   const categoryToRemove = this.categories[index];
 
-  // Remove from the categories list (UI update)
-  this.categories.splice(index, 1);
+//   // Remove from the categories list (UI update)
+//   this.categories.splice(index, 1);
 
-  // Remove from the selected category list (selectedCategoryIds)
-  const categoryIndex = this.existingselectedCategories.findIndex(
-    (cat) => cat.categoryID === categoryToRemove.categoryID
-  );
-  if (categoryIndex !== -1) {
-    this.existingselectedCategories.splice(categoryIndex, 1);
-  }
+//   // Remove from the selected category list (selectedCategoryIds)
+//   const categoryIndex = this.existingselectedCategories.findIndex(
+//     (cat) => cat.categoryID === categoryToRemove.categoryID
+//   );
+//   if (categoryIndex !== -1) {
+//     this.existingselectedCategories.splice(categoryIndex, 1);
+//   }
 
-  // Optionally, you could log to see the updated lists
-  console.log("Updated Categories List:", this.categories);
-  console.log("Updated Selected Categories List:", this.existingselectedCategories);
-}
+//   // Optionally, you could log to see the updated lists
+//   console.log("Updated Categories List:", this.categories);
+//   console.log("Updated Selected Categories List:", this.existingselectedCategories);
+// }
 
 
 // Save Changes to API
@@ -265,7 +292,7 @@ saveCategoryChanges(): void {
   console.log('Removed Categories:', removedCategories);
 
   // Now only send the selected categories (added/remaining categories)
-  this.dashboardService.updateCategories("abfd7851-bfb7-44b8-9a91-de700aab888d", selectedCategoryIds).subscribe(
+  this.dashboardService.updateCategories("0dc3331c-e54e-45a1-ba3a-366b12a7ed46", selectedCategoryIds).subscribe(
     () => {
       alert("Categories updated successfully!");
       // Handle further UI updates like closing modals or refreshing data
@@ -276,7 +303,30 @@ saveCategoryChanges(): void {
   );
 }
 
+moveToAvailable(category: any) {
+  this.selectedCategories = this.selectedCategories.filter(c => c.categoryId !== category.categoryId);
+  this.availableCategories.push(category);
+}
 
+// Move category from available to selected
+moveToSelected(category: any) {
+  this.availableCategories = this.availableCategories.filter(c => c.categoryId !== category.categoryId);
+  this.selectedCategories.push(category);
+}
+
+// Filter selected categories based on search
+filteredSelectedCategories() {
+  return this.selectedCategories.filter(cat =>
+    cat.categoryName.toLowerCase().includes(this.selectedSearch.toLowerCase())
+  );
+}
+
+// Filter available categories based on search
+filteredAvailableCategories() {
+  return this.availableCategories.filter(cat =>
+    cat.categoryName.toLowerCase().includes(this.availableSearch.toLowerCase())
+  );
+}
 
 
 

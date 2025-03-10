@@ -29,6 +29,7 @@ export class HomeComponent {
     { label: 'Plan', route: 'user-dashboard' },
     { label: 'Expense', route: 'expense' },
     { label: 'Profile', route: 'profile' },
+    { label: 'Compare Plan', route: 'compare-plan' },
   ];
 
 

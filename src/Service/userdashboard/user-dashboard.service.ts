@@ -37,4 +37,10 @@ export class UserDashboardService {
     const url = `https://localhost:7156/api/User/updateCategories/${userId}`;
     return this.http.put(url, categoryIds, { headers: this.getHeaders() });
   }
+
+
+  getUserCategories(): Observable<any> {
+    const url = `${this.apiUrl}/get-user-categories`;
+    return this.http.get(url, { headers: this.getHeaders() });
+  }
 }

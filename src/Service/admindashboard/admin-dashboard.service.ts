@@ -26,15 +26,17 @@ export class AdminDashboardService {
 
   constructor(private http: HttpClient) {}
 
-  getGraphDataForLastDays(lastDays: number): Observable<GraphDataResponse> {
+  getGraphDataForDateRange(startDate: string, endDate: string): Observable<GraphDataResponse> {
     return this.http.get<GraphDataResponse>(
-      `${this.baseUrl}/GetGraphDataForLastDays?lastDays=${lastDays}`
+      `${this.baseUrl}/GetGraphDataForDateRange?startDate=${startDate}&endDate=${endDate}`
     );
   }
+  
 
-  getExpensesForLastDays(lastDays: number): Observable<CategoryExpense[]> {
+  getExpensesForDateRange(startDate: string, endDate: string): Observable<CategoryExpense[]> {
     return this.http.get<CategoryExpense[]>(
-      `${this.baseUrl}/GetExpensesForLastDays?lastDays=${lastDays}`
+      `${this.baseUrl}/GetExpensesForDateRange?startDate=${startDate}&endDate=${endDate}`
     );
   }
+  
 }

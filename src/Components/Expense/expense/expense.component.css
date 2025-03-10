@@ -220,3 +220,55 @@ th span {
   font-size: 12px;
   color: gray;
 }
+
+.date-filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.date-filters button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  background: #e0e0e0;
+  transition: 0.3s;
+}
+
+.date-filters button.active {
+  background: #007bff;
+  color: white;
+}
+
+.date-filters button:hover {
+  background: #0056b3;
+  color: white;
+}
+
+
+.chart-container {
+  flex: 1;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: 300px;
+}
+
+/* Table Container */
+.table-container {
+  flex: 2;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+  }
+}

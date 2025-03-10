@@ -59,14 +59,18 @@
                 <tr *ngFor="let category of categories">
                   <td>{{ category.name }}</td>
                   <td>
-                    <input type="number" [(ngModel)]="category.allocation" placeholder="Allocation (%)" />
+                    <input type="number" [(ngModel)]="category.allocation" (input)="updateTotalAllocation()"  placeholder="Allocation (%)" />
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
+           <!-- Display validation error -->
+          <p *ngIf="allocationError" class="error-message">{{ allocationError }}</p>
+          <p><strong>Total Allocation:</strong> {{ totalAllocation }}%</p>
+
           <div class="modal-actions">
-            <button (click)="saveAllocationChanges()">Save</button>
+            <button (click)="saveAllocationChanges()" [disabled]="allocationError">Save</button>
             <button (click)="closeAllocationModal()">Cancel</button>
           </div>
         </div>
@@ -77,39 +81,40 @@
         <div class="modal-content">
           <h3>Manage Categories</h3>
       
-          <!-- Add Category -->
-          <label>Search Categories:</label>
-          <input type="text" [(ngModel)]="searchText" (input)="onSearchTextChanged()" placeholder="Search categories" />
       
-          <div class="dropdown">
-            <div *ngFor="let category of allCategories" class="dropdown-item" (click)="addCategory(category)">
-              {{ category.name }}
+          <div class="category-container">
+            <!-- Selected Categories (Left) -->
+            <div class="category-list">
+              <h3>Selected Categories</h3>
+              <input type="text" [(ngModel)]="selectedSearch" placeholder="Search..." class="search-bar" />
+              <div class="scrollable-list">
+                <ul>
+                  <li *ngFor="let category of filteredSelectedCategories()">
+                    <span class="category-name">{{ category.categoryName }}</span>
+                    <span class="arrow" (click)="moveToAvailable(category)">→</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          
+            <!-- Available Categories (Right) -->
+            <div class="category-list">
+              <h3>Available Categories</h3>
+              <input type="text" [(ngModel)]="availableSearch" placeholder="Search..." class="search-bar" />
+              <div class="scrollable-list">
+                <ul>
+                  <li *ngFor="let category of filteredAvailableCategories()">
+                    <span class="arrow" (click)="moveToSelected(category)">←</span>
+                    <span class="category-name">{{ category.categoryName }}</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-      
-          <!-- Selected Categories Table -->
-          <div class="selected-categories-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Category Name</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-            </table>
-            <div class="scrollable-table">
-              <table>
-                <tbody>
-                  <tr *ngFor="let category of categories; let i = index">
-                    <td>{{ category.name }}</td>
-                    <td>
-                      <button (click)="removeCategory(i)">Remove</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          
+          
+          
+          
       
           <div class="modal-actions">
             <button (click)="saveCategoryChanges()">Save</button>
@@ -117,6 +122,7 @@
           </div>
         </div>
       </div>
+      
       
       
 

@@ -1,7 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ExpenseService } from '../../../Service/expense/expense.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Chart } from 'chart.js/auto';
+import { CategoryService } from '../../../Service/category/category.service';
+import { SubcategoryService } from '../../../Service/subcategory/subcategory.service';
+
+
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface SubCategory {
+  id: string;
+  name: string;
+}
 
 @Component({
   selector: 'app-expense',
@@ -15,8 +29,8 @@ export class ExpenseComponent implements OnInit {
   isDeleteModalOpen: boolean = false;
   editableExpense: any = null;
   selectedExpense: any = null;
-  subCategories: any[] = []; // Full list of subcategories fetched from the API
-  filteredSubCategories: any[] = []; // Filtered list based on search text
+  // subCategories: any[] = []; // Full list of subcategories fetched from the API
+  // filteredSubCategories: any[] = []; // Filtered list based on search text
   expenses: any[] = []; // Expenses fetched from the API
   isModalOpen: boolean = false;
   newExpense: any = {
@@ -24,16 +38,71 @@ export class ExpenseComponent implements OnInit {
     amount: null,
     subCategoryId: null,
   };
-  searchText: string = ''; // Text input for filtering categories
-  selectedSubCategory: string = ''; // Selected subcategory name
+
+  // selectedSubCategory: string = ''; 
   sortColumn: string = 'createdDate'; // Default sorting column
   sortDirection: 'asc' | 'desc' = 'desc';
+  chart: any;
+  filteredExpenses: any[] = [];
+  selectedDays: number = 7;
 
-  constructor(private expenseService: ExpenseService) {}
+  categories: Category[] = [];
+  subCategories: SubCategory[] = [];
+  filteredSubCategories: SubCategory[] = [];
+  
+  selectedCategoryId: string = '';
+  selectedSubCategory: string = ''; // Selected subcategory name
+  searchText: string = ''; // Text input for filtering categories
+  
+
+
+
+
+  constructor(private categoryService: CategoryService, private subcategoryService: SubcategoryService,private expenseService: ExpenseService) {}
 
   ngOnInit(): void {
     this.fetchSubCategories();
     this.fetchExpenses(); // Fetch recent expenses on initialization
+    this.loadCategories();
+    
+  }
+
+
+  loadCategories() {
+    this.categoryService.getCategories().subscribe((data) => {
+      this.categories = data;
+    });
+  }
+
+  onCategoryChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    if (target) {
+      const categoryId = target.value;
+      this.selectedCategoryId = categoryId;
+      this.newExpense.categoryId = categoryId;
+      this.loadSubCategories(categoryId);
+    }
+  }
+  
+  
+
+  loadSubCategories(categoryId: string) {
+    this.subcategoryService.getSubCategoriesByCategoryId(categoryId).subscribe((data) => {
+      this.subCategories = data;
+      this.filteredSubCategories = [...this.subCategories]; // Reset filter
+    });
+  }
+
+  onSearchTextChanged() {
+    this.filteredSubCategories = this.subCategories.filter((sub) =>
+      sub.name.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+  }
+
+  selectSubCategory(subCategoryId: string, subCategoryName: string) {
+    this.selectedSubCategory = subCategoryName;
+    this.newExpense.subCategoryId = subCategoryId;
+    this.searchText = subCategoryName; // Update input field with selected value
   }
 
   fetchSubCategories(): void {
@@ -52,6 +121,7 @@ export class ExpenseComponent implements OnInit {
     this.expenseService.getExpenses().subscribe({
       next: (data) => {
         this.expenses = data; // Populate the expenses array
+        this.filterExpensesByDays(this.selectedDays);
       },
       error: (error) => {
         console.error('Failed to load expenses:', error);
@@ -59,22 +129,22 @@ export class ExpenseComponent implements OnInit {
     });
   }
 
-  onSearchTextChanged(): void {
-    if (!this.searchText) {
-      this.filteredSubCategories = [...this.subCategories]; // Reset to full list if search is empty
-    } else {
-      this.filteredSubCategories = this.subCategories.filter((category) =>
-        category.name.toLowerCase().includes(this.searchText.toLowerCase())
-      );
-    }
-  }
+  // onSearchTextChanged(): void {
+  //   if (!this.searchText) {
+  //     this.filteredSubCategories = [...this.subCategories]; // Reset to full list if search is empty
+  //   } else {
+  //     this.filteredSubCategories = this.subCategories.filter((category) =>
+  //       category.name.toLowerCase().includes(this.searchText.toLowerCase())
+  //     );
+  //   }
+  // }
 
-  selectSubCategory(id: string, name: string): void {
-    this.newExpense.subCategoryId = id; 
-    this.selectedSubCategory = name; 
-    this.searchText = name;
-    this.filteredSubCategories = [...this.subCategories]; 
-  }
+  // selectSubCategory(id: string, name: string): void {
+  //   this.newExpense.subCategoryId = id; 
+  //   this.selectedSubCategory = name; 
+  //   this.searchText = name;
+  //   this.filteredSubCategories = [...this.subCategories]; 
+  // }
 
   openAddExpenseModal(): void {
     this.isModalOpen = true;
@@ -210,4 +280,70 @@ getSortIcon(column: string): string {
   return this.sortDirection === 'asc' ? '&#9650;' : '&#9660;'; 
 }
 
+filterExpensesByDays(days: number): void {
+  this.selectedDays = days;
+
+  // Get last 'days' dates including today
+  const dateMap = new Map<string, number>();
+  const today = new Date();
+
+  for (let i = 0; i < days; i++) {
+    const date = new Date();
+    date.setDate(today.getDate() - i);
+    const dateString = date.toISOString().split('T')[0]; // Format YYYY-MM-DD
+    dateMap.set(dateString, 0); // Initialize all dates with 0
+  }
+
+  // Populate actual expense data
+  this.expenses.forEach(expense => {
+    const expenseDate = new Date(expense.createdDate).toISOString().split('T')[0];
+    if (dateMap.has(expenseDate)) {
+      dateMap.set(expenseDate, (dateMap.get(expenseDate) || 0) + expense.amount);
+    }
+  });
+
+  const labels = Array.from(dateMap.keys()).reverse(); // Reverse to show oldest first
+  const dataPoints = Array.from(dateMap.values()).reverse();
+
+  this.createBarChart(labels, dataPoints);
+}
+
+createBarChart(labels: string[], dataPoints: number[]): void {
+  if (this.chart) {
+    this.chart.destroy();
+  }
+
+  const ctx = document.getElementById('barChart') as HTMLCanvasElement;
+
+  this.chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Daily Expenses',
+        data: dataPoints,
+        backgroundColor: '#007bff',
+        borderColor: '#0056b3',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top' },
+        title: { display: true, text: `Expenses Over Last ${this.selectedDays} Days` }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Date' }
+        },
+        y: {
+          title: { display: true, text: 'Amount (INR)' },
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
 }

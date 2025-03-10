@@ -1,0 +1,67 @@
+<div class="compare-plan-container">
+    <h2>Budget Plan Comparison</h2>
+  
+    <div class="summary-card">
+      <h3>{{ planName }}</h3>
+      <p><strong>Income:</strong> ₹{{ income | number }}</p>
+      <p><strong>Total Expense:</strong> ₹{{ totalExpense | number }}</p>
+    </div>
+  
+    <div class="allocations">
+      <h3>Category Allocations</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>User Allocation (%)</th>
+            <th>Admin Allocation (%)</th>
+            <th>Difference</th>
+            <th>User Expense</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let alloc of userAllocations">
+            <td>{{ alloc.categoryName }}</td>
+            <td>
+              <div class="progress-bar">
+                <div class="progress user" [style.width.%]="alloc.userAllocation"></div>
+              </div>
+              {{ alloc.userAllocation }}%
+            </td>
+            <td>
+              <div class="progress-bar">
+                <div class="progress admin" [style.width.%]="alloc.adminAllocation"></div>
+              </div>
+              {{ alloc.adminAllocation }}%
+            </td>
+            <td [ngClass]="{'positive': alloc.difference > 0, 'negative': alloc.difference < 0}">
+              {{ alloc.difference }}%
+            </td>
+            <td>₹{{ alloc.userExpense | number }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div class="admin-only">
+      <h3>Admin Only Allocations</h3>
+      <table *ngIf="adminOnlyAllocations.length > 0">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Admin Allocation (%)</th>
+            <th>Difference</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let alloc of adminOnlyAllocations">
+            <td>{{ alloc.categoryName }}</td>
+            <td>{{ alloc.adminAllocation }}%</td>
+            <td class="negative">{{ alloc.difference }}%</td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="adminOnlyAllocations.length === 0">No extra categories in the admin plan.</p>
+    </div>
+  </div>
+  

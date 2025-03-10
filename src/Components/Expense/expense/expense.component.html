@@ -1,48 +1,67 @@
 <div class="expense-container">
-  <div class="header">
-    <h2>Expenses</h2>
-    <button class="add-expense-button" (click)="openAddExpenseModal()">+ Add Expense</button>
-  </div>
+  <div class="content">
+    <!-- Left Side: Line Chart -->
+    <div class="button-group">
+      <button class="btn" (click)="filterExpensesByDays(3)">Last 3 Days</button>
+      <button class="btn" (click)="filterExpensesByDays(7)">Last 7 Days</button>
+      <button class="btn" (click)="filterExpensesByDays(15)">Last 15 Days</button>
+      <button class="btn" (click)="filterExpensesByDays(30)">Last 30 Days</button>
+    </div>
+    
+    <!-- Chart Section -->
+    <div class="chart-container">
+      <canvas id="barChart"></canvas>
+    </div>
+    
 
-  <table class="expense-table">
-    <thead>
-      <tr>
-        <th (click)="sortExpenses('expenseName')">
-          Expense Name <span [innerHTML]="getSortIcon('expenseName')"></span>
-        </th>
-        <th (click)="sortExpenses('amount')">
-          Amount <span [innerHTML]="getSortIcon('amount')"></span>
-        </th>
-        <th (click)="sortExpenses('subCategoryName')">
-          Category <span [innerHTML]="getSortIcon('subCategoryName')"></span>
-        </th>
-        <th (click)="sortExpenses('createdDate')">
-          Created Date <span [innerHTML]="getSortIcon('createdDate')"></span>
-        </th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngIf="!expenses || expenses.length === 0">
-        <td colspan="5" class="no-expense-message">No expenses to display</td>
-      </tr>
-      <tr *ngFor="let expense of expenses">
-        <td>{{ expense.expenseName }}</td>
-        <td>{{ expense.amount | currency: 'INR' }}</td>
-        <td>{{ expense.subCategoryName || 'N/A' }}</td>
-        <td>{{ expense.createdDate | date: 'short' }}</td>
-        <td class="action-column">
-          <div class="menu-container">
-            <button class="menu-button" (click)="toggleMenu(expense, $event)">⋮</button>
-            <div class="dropdown-menu" *ngIf="expense.showMenu">
-              <button (click)="openEditExpenseModal(expense)">Edit</button>
-              <button (click)="openDeleteConfirmation(expense)">Delete</button>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <!-- Right Side: Expense Table -->
+    <div class="table-container">
+      <div class="header">
+        <h2>Expenses</h2>
+        <button class="add-expense-button" (click)="openAddExpenseModal()">+ Add Expense</button>
+      </div>
+
+      <table class="expense-table">
+        <thead>
+          <tr>
+            <th (click)="sortExpenses('expenseName')">
+              Expense Name <span [innerHTML]="getSortIcon('expenseName')"></span>
+            </th>
+            <th (click)="sortExpenses('amount')">
+              Amount <span [innerHTML]="getSortIcon('amount')"></span>
+            </th>
+            <th (click)="sortExpenses('subCategoryName')">
+              Category <span [innerHTML]="getSortIcon('subCategoryName')"></span>
+            </th>
+            <th (click)="sortExpenses('createdDate')">
+              Created Date <span [innerHTML]="getSortIcon('createdDate')"></span>
+            </th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="!expenses || expenses.length === 0">
+            <td colspan="5" class="no-expense-message">No expenses to display</td>
+          </tr>
+          <tr *ngFor="let expense of expenses">
+            <td>{{ expense.expenseName }}</td>
+            <td>{{ expense.amount | currency: 'INR' }}</td>
+            <td>{{ expense.subCategoryName || 'N/A' }}</td>
+            <td>{{ expense.createdDate | date: 'short' }}</td>
+            <td class="action-column">
+              <div class="menu-container">
+                <button class="menu-button" (click)="toggleMenu(expense, $event)">⋮</button>
+                <div class="dropdown-menu" *ngIf="expense.showMenu">
+                  <button (click)="openEditExpenseModal(expense)">Edit</button>
+                  <button (click)="openDeleteConfirmation(expense)">Delete</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
   
 
    <!-- Add Expense Modal -->
@@ -57,7 +76,7 @@
           [ngModelOptions]="{ standalone: true }"
           placeholder="Enter expense name"
         />
-
+  
         <label>Amount:</label>
         <input
           type="number"
@@ -65,7 +84,17 @@
           [ngModelOptions]="{ standalone: true }"
           placeholder="Enter amount"
         />
+  
+        <label>Category:</label>
+        <select [(ngModel)]="selectedCategoryId" [ngModelOptions]="{ standalone: true }"
+  (change)="onCategoryChange($event)">
+  <option value="" disabled selected>Select Category</option>
+  <option *ngFor="let category of categories" [value]="category.id">
+    {{ category.name }}
+  </option>
+</select>
 
+  
         <label>SubCategory:</label>
         <input
           type="text"
@@ -83,9 +112,9 @@
             {{ category.name }}
           </div>
         </div>
-
+  
         <p *ngIf="selectedSubCategory">Selected: {{ selectedSubCategory }}</p>
-
+  
         <div class="modal-actions">
           <button type="button" class="add-button" (click)="addExpense()">Add</button>
           <button type="button" class="cancel-button" (click)="closeModal()">Cancel</button>
@@ -93,6 +122,7 @@
       </form>
     </div>
   </div>
+  
 
   <!-- Edit Expense Modal -->
   <div class="modal" *ngIf="isEditModalOpen">

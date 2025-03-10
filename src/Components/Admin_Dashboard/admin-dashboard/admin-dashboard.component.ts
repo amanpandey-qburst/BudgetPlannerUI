@@ -2,15 +2,19 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Chart } from 'chart.js/auto';
 import { AdminDashboardService, GraphDataResponse, CategoryExpense } from '../../../Service/admindashboard/admin-dashboard.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit, AfterViewInit {
+  startDate: string = "";
+  endDate: string = "";
+
   chart: any;
   graphData: any[] = [];
   distinctCategories: any[] = [];
@@ -20,26 +24,45 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
   constructor(private adminDashboardService: AdminDashboardService) {}
 
   ngOnInit() {
-    this.fetchGraphData(7); // Default to 30 days
+    this.updateChart(7); // Default to last 7 days
   }
 
   ngAfterViewInit() {
-    window.addEventListener('resize', this.onResize.bind(this)); // Listen for resize events
+    window.addEventListener('resize', this.onResize.bind(this));
   }
 
   onResize() {
     if (this.chart) {
-      this.chart.resize(); // Resize chart when window is resized
+      this.chart.resize();
     }
   }
 
-  fetchGraphData(lastDays: number) {
-    this.adminDashboardService.getGraphDataForLastDays(lastDays).subscribe(
+  /** 
+   * Convert dates to YYYY-MM-DD format (backend expects standard date format)
+   */
+  private formatDate(date: Date): string {
+    return date.toISOString().split('T')[0]; // Extract only YYYY-MM-DD
+  }
+
+  fetchCustomDateRange() {
+    if (this.startDate && this.endDate) {
+      this.fetchGraphData(this.startDate, this.endDate);
+    } else {
+      console.error('Please select both start and end dates.');
+    }
+  }
+
+
+  /** 
+   * Fetch graph data for a specific date range
+   */
+  fetchGraphData(startDate: string, endDate: string) {
+    this.adminDashboardService.getGraphDataForDateRange(startDate, endDate).subscribe(
       (response: GraphDataResponse) => {
         this.graphData = response.graphData;
         this.distinctCategories = response.distinctCategories;
-        this.fetchExpensesForLastDays(lastDays); 
-        this.createChart(lastDays);
+        this.fetchExpensesForDateRange(startDate, endDate);
+        this.createChart(startDate, endDate);
       },
       (error) => {
         console.error('Error fetching graph data:', error);
@@ -47,11 +70,14 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
     );
   }
 
-  fetchExpensesForLastDays(lastDays: number) {
-    this.adminDashboardService.getExpensesForLastDays(lastDays).subscribe(
+  /** 
+   * Fetch category-wise expense data for a specific date range
+   */
+  fetchExpensesForDateRange(startDate: string, endDate: string) {
+    this.adminDashboardService.getExpensesForDateRange(startDate, endDate).subscribe(
       (expenses: CategoryExpense[]) => {
         this.expensesData = expenses;
-        this.createChart(lastDays); // After getting expenses data, create the chart
+        this.createChart(startDate, endDate);
       },
       (error) => {
         console.error('Error fetching expenses:', error);
@@ -59,12 +85,26 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
     );
   }
 
+  /** 
+   * Updates chart based on selected number of days
+   * It calculates the start date and calls `fetchGraphData()`
+   */
   updateChart(days: number) {
-    this.fetchGraphData(days);
+    const today = new Date();
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() - days + 1); // Calculate start date
+
+    const formattedStartDate = this.formatDate(startDate);
+    const formattedEndDate = this.formatDate(today);
+
+    this.fetchGraphData(formattedStartDate, formattedEndDate);
   }
 
-  createChart(days: number) {
-    const labels = this.getAllDatesInRange(days);
+  /**
+   * Create the bar chart for graph data
+   */
+  createChart(startDate: string, endDate: string) {
+    const labels = this.getAllDatesInRange(startDate, endDate);
 
     const datasets = this.distinctCategories.map((category, index) => {
       return {
@@ -74,7 +114,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
             ?.categoryExpenses.find((exp: CategoryExpense) => exp.categoryId === category.categoryId);
           return categoryExpense ? categoryExpense.totalAmount : 0;
         }),
-        backgroundColor: this.colors[index],
+        backgroundColor: this.colors[index % this.colors.length],
         stack: 'stack1',
       };
     });
@@ -92,7 +132,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false, // Allow resizing
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             position: 'top',
@@ -114,15 +154,17 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getAllDatesInRange(lastDays: number): string[] {
+  /**
+   * Get all dates between start and end date in 'MM/DD/YYYY' format
+   */
+  getAllDatesInRange(startDate: string, endDate: string): string[] {
     const allDates: string[] = [];
-    const today = new Date();
-    let currentDate = new Date(today);
-    currentDate.setDate(currentDate.getDate() - lastDays + 1); // Start date for the selected range
+    let currentDate = new Date(startDate);
+    const end = new Date(endDate);
 
-    while (currentDate <= today) {
+    while (currentDate <= end) {
       allDates.push(currentDate.toLocaleDateString());
-      currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+      currentDate.setDate(currentDate.getDate() + 1);
     }
 
     return allDates;

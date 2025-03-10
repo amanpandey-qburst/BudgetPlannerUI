@@ -6,6 +6,12 @@
       <button class="btn" (click)="updateChart(15)">Last 15 Days</button>
       <button class="btn" (click)="updateChart(30)">Last 30 Days</button>
     </div>
+
+    <div class="date-picker-group">
+      <label>From: <input type="date" [(ngModel)]="startDate"></label>
+      <label>To: <input type="date" [(ngModel)]="endDate"></label>
+      <button class="btn" (click)="fetchCustomDateRange()">Apply</button>
+  </div>
   
     <!-- Chart Section -->
     <div class="chart-container">
