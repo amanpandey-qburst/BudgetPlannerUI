@@ -187,9 +187,50 @@
 
 
 .category-list {
-  list-style-type: none;
-  padding: 0;
+  max-height: 250px; /* Adjust the height as needed */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: white;
+  padding: 10px;
 }
+
+/* Ensures the list doesn't interfere */
+.category-list ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+/* Custom scrollbar styling (optional) */
+.category-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.category-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 5px;
+}
+
+.category-list::-webkit-scrollbar-thumb {
+  background: #9aa6b2;
+  border-radius: 5px;
+}
+
+.category-list::-webkit-scrollbar-thumb:hover {
+  background: #7a8a99;
+}
+
+.category-search {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+
 
 .category-item {
   display: flex;

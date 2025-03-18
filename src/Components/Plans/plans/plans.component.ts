@@ -29,6 +29,8 @@ export class PlansComponent implements OnInit {
   availableCategories: Category[] = [];
   selectedCategories: Category[] = [];
   searchQuery: string = '';
+  searchAvailableCategoryQuery: string = '';
+filteredCategories: any[] = [];
   
   // Pagination
   currentPage: number = 1;
@@ -47,7 +49,10 @@ export class PlansComponent implements OnInit {
   ngOnInit() {
     this.getPlans();
     this.fetchCategories();
+    
   }
+
+
 
   getPlans() {
     this.planService.getPlans().subscribe(
@@ -67,12 +72,25 @@ export class PlansComponent implements OnInit {
       (data: Category[]) => {
         this.categories = data;
         this.availableCategories = [...this.categories];
+        this.filteredCategories = [...this.availableCategories]; 
       },
       (error) => {
         console.error('Error fetching categories:', error);
       }
     );
   }
+
+  
+  filterCategories() {
+    if (!this.searchAvailableCategoryQuery.trim()) {
+      this.filteredCategories = [...this.availableCategories];
+    } else {
+      this.filteredCategories = this.availableCategories.filter(category =>
+        category.name.toLowerCase().includes(this.searchAvailableCategoryQuery.toLowerCase())
+      );
+    }
+  }
+  
 
   navigateToPlanDetails(plan: any) {
     this.router.navigate(['home/plandetails'], { state: { plan } });

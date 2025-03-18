@@ -64,14 +64,30 @@
       />
 
       <h4>Available Categories</h4>
-      <ul>
-        <li *ngFor="let category of availableCategories" class="category-item">
-          <span>{{ category.name }}</span>
-          <button type="button" class="btn-add" (click)="addCategoryToPlan(category)">
-            Add
-          </button>
-        </li>
-      </ul>
+      <div class="category-list">
+        <!-- 🔹 FIX: Use the correct searchQuery variable -->
+        <input
+        type="text"
+        [(ngModel)]="searchAvailableCategoryQuery"
+        name="searchCategory"
+        (input)="filterCategories()"
+        placeholder="Search categories..."
+        class="category-search"
+      />
+      
+      
+        <ul>
+          <li *ngFor="let category of filteredCategories" class="category-item">
+            <span>{{ category.name }}</span>
+            <button type="button" class="btn-add" (click)="addCategoryToPlan(category)">
+              Add
+            </button>
+          </li>
+        </ul>
+      </div>
+      
+
+
 
       <h4>Selected Categories</h4>
       <ul>
