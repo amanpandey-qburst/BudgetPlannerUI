@@ -1,6 +1,6 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js/auto';
-import { AdminDashboardService, GraphDataResponse, CategoryExpense } from '../../../Service/admindashboard/admin-dashboard.service';
+import { AdminDashboardService, GraphDataResponse, CategoryExpense,UserDetail } from '../../../Service/admindashboard/admin-dashboard.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -19,12 +19,22 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
   graphData: any[] = [];
   distinctCategories: any[] = [];
   expensesData: CategoryExpense[] = [];
-  colors = ["#FF5733", "#33FF57", "#3357FF", "#F3FF33", "#FF33A1"];
+  colors = ["#4A90E2", "#7DCEA0", "#F5B041", "#D7DBDD", "#AF7AC5"];
+
+
+  @ViewChild('userDialog') userDialog!: ElementRef<HTMLDialogElement>;
+
+  users: UserDetail[] = [];
+  searchQuery: string = '';
+  selectedUserFinancialDetails: any = null; // Stores the selected user details
+isUserSelected: boolean = false; // Toggle between user list and financial details
+
 
   constructor(private adminDashboardService: AdminDashboardService) {}
 
   ngOnInit() {
-    this.updateChart(7); // Default to last 7 days
+    this.updateChart(15); // Default to last 7 days
+    this.loadUsers();
   }
 
   ngAfterViewInit() {
@@ -169,4 +179,66 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
 
     return allDates;
   }
+
+  loadUsers() {
+    this.adminDashboardService.getNonAdminUsers().subscribe((users) => {
+      this.users = users;
+    });
+  }
+
+  openUserDialog() {
+    this.userDialog.nativeElement.showModal();
+  }
+
+  closeUserDialog() {
+    this.userDialog.nativeElement.close();
+  }
+
+  filteredUsers(): UserDetail[] {
+    return this.users.filter((user) =>
+      user.firstName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+      user.lastName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+      user.emailId.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+  }
+
+  
+  openFilterDialog() {
+    console.log("Filter dialog opened!");
+    // Logic to open the filter options (e.g., category-wise, date range)
+  }
+  
+  exportData() {
+    console.log("Exporting data...");
+    // Logic to export data as CSV/PDF
+  }
+
+  fetchUserFinancialDetails(userId: string) {
+    this.adminDashboardService.getUserFinancialDetails(
+      `https://localhost:7156/api/AdminDashboard/get-user-financial-details/${userId}`
+    ).subscribe((response) => {
+      this.selectedUserFinancialDetails = this.calculateFinancialSummary(response);
+      this.isUserSelected = true;
+    });
+  }
+
+  calculateFinancialSummary(userData: any) {
+    const totalIncome = userData.incomes.reduce((sum: number, income: any) => sum + income.amount, 0);
+    const totalExpense = userData.plans[0]?.totalExpense || 0;
+  
+    // Extract category-wise expenses
+    const categoryExpenses = userData.plans[0]?.userPlanAllocations.map((allocation: any) => ({
+      categoryName: allocation.categoryName,
+      expense: allocation.expense
+    })) || [];
+  
+    return {
+      totalIncome,
+      totalExpenses: totalExpense,
+      categoryExpenses
+    };
+  }
+  
+  
+  
 }

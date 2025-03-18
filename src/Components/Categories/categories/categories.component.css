@@ -61,6 +61,7 @@
   padding: 25px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   /* flex: calc((100% - 40px) / 3); */
+  max-height: 30%;
   box-sizing: border-box;
   cursor: pointer;
   width: calc((100% - 40px) / 3);

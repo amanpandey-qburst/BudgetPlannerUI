@@ -18,6 +18,11 @@
       <canvas id="barChart"></canvas>
     </div>
 
+    <div class="actions-container">
+      <button class="btn" (click)="openUserDialog()">View Users</button>
+      <button class="btn" (click)="exportData()">Export Data</button>
+    </div>
+
     <div class="expenses-table">
         <h3>Expenses Summary</h3>
         <table>
@@ -35,6 +40,65 @@
           </tbody>
         </table>
       </div>
+
+   
+
+    <!-- Dialog Box -->
+    <dialog #userDialog class="user-dialog">
+      <div class="dialog-header">
+        <h3>Users</h3>
+        <button class="close-btn" (click)="closeUserDialog()">✖</button>
+      </div>
+
+      
+
+      <!-- User Cards -->
+     <!-- User List (Hidden When a User is Selected) -->
+<div *ngIf="!isUserSelected">
+  <!-- Search Bar -->
+  <div class="search-container">
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Search users..." />
+  </div>
+  <div *ngIf="filteredUsers().length === 0" class="no-users">No users to display</div>
+  <div *ngFor="let user of filteredUsers()" class="user-card" (click)="fetchUserFinancialDetails(user.id)">
+
+    <img [src]="user.photoURL" alt="User Photo" class="user-photo">
+    <div class="user-details">
+      <h4>{{ user.firstName }} {{ user.lastName }}</h4>
+      <p>Email: {{ user.emailId }}</p>
+      <p>DOB: {{ user.dateOfBirth | date: 'dd/MM/yyyy' }}</p>
+      <p>Gender: {{ user.gender }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Show User Financial Details (Only When a User is Selected) -->
+<div *ngIf="isUserSelected" class="user-financial-details">
+  <button class="btn back-btn" (click)="isUserSelected = false">⬅ Back to Users</button>
+
+  <h2 class="title">Financial Overview</h2>
+
+  <div class="summary">
+    <p><strong>Total Income:</strong> ₹{{ selectedUserFinancialDetails?.totalIncome }}</p>
+    <p><strong>Total Expenses:</strong> ₹{{ selectedUserFinancialDetails?.totalExpenses }}</p>
+  </div>
+
+  <h3 class="sub-title">Category-wise Expenses</h3>
+
+  <div class="expense-table">
+    <div class="expense-row header">
+      <span>Category</span>
+      <span>Expense (₹)</span>
+    </div>
+    <div class="expense-row" *ngFor="let category of selectedUserFinancialDetails?.categoryExpenses">
+      <span>{{ category.categoryName }}</span>
+      <span>₹{{ category.expense }}</span>
+    </div>
+  </div>
+</div>
+
+
+    </dialog>
 
     
   </div>

@@ -18,6 +18,17 @@ export interface GraphDataResponse {
   distinctCategories: { categoryId: string; categoryName: string }[];
 }
 
+export interface UserDetail {
+  id: string; 
+  firstName: string;
+  lastName: string;
+  emailId: string;
+  dateOfBirth: string;
+  gender: string;
+  photoURL: string;
+}
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -37,6 +48,14 @@ export class AdminDashboardService {
     return this.http.get<CategoryExpense[]>(
       `${this.baseUrl}/GetExpensesForDateRange?startDate=${startDate}&endDate=${endDate}`
     );
+  }
+
+  getNonAdminUsers(): Observable<UserDetail[]> {
+    return this.http.get<UserDetail[]>(`${this.baseUrl}/get-non-admin-users`);
+  }
+  
+  getUserFinancialDetails(apiUrl: string) {
+    return this.http.get(apiUrl);
   }
   
 }

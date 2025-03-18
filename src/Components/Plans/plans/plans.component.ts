@@ -11,7 +11,7 @@ interface Category {
   description: string;
   isBasic: boolean;
   isDeleted: boolean;
-  percentage?: number; 
+  percentage?: number;
 }
 
 @Component({
@@ -24,12 +24,17 @@ interface Category {
 export class PlansComponent implements OnInit {
   plans: any[] = [];
   filteredPlans: any[] = [];
-  categories: Category[] = []; 
-  availableCategories: Category[] = []; 
-  selectedCategories: Category[] = []; 
+  displayedPlans: any[] = [];
+  categories: Category[] = [];
+  availableCategories: Category[] = [];
+  selectedCategories: Category[] = [];
   searchQuery: string = '';
+  
+  // Pagination
   currentPage: number = 1;
+  pageSize: number = 8; // Number of items per page
   totalPages: number = 1;
+
   isAddPlanPopupOpen: boolean = false;
   newPlan: any = { name: '', minimumIncome: 0, categories: [] };
 
@@ -41,15 +46,15 @@ export class PlansComponent implements OnInit {
 
   ngOnInit() {
     this.getPlans();
-    this.fetchCategories(); 
+    this.fetchCategories();
   }
 
   getPlans() {
-    this.planService.getPlans(this.currentPage).subscribe(
+    this.planService.getPlans().subscribe(
       (data: any) => {
         this.plans = data;
-        this.filteredPlans = this.plans;
-        this.totalPages = 1;
+        this.filteredPlans = [...this.plans];
+        this.updatePagination();
       },
       (error) => {
         console.error('Error fetching plans:', error);
@@ -61,7 +66,7 @@ export class PlansComponent implements OnInit {
     this.categoryService.getCategories().subscribe(
       (data: Category[]) => {
         this.categories = data;
-        this.availableCategories = [...this.categories]; 
+        this.availableCategories = [...this.categories];
       },
       (error) => {
         console.error('Error fetching categories:', error);
@@ -75,12 +80,30 @@ export class PlansComponent implements OnInit {
 
   filterPlans() {
     if (!this.searchQuery.trim()) {
-      this.filteredPlans = this.plans;
+      this.filteredPlans = [...this.plans];
     } else {
       this.filteredPlans = this.plans.filter((plan) =>
         plan.name.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     }
+    this.currentPage = 1; // Reset to first page after filtering
+    this.updatePagination();
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.filteredPlans.length / this.pageSize);
+    this.displayPlans();
+  }
+
+  displayPlans() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedPlans = this.filteredPlans.slice(start, end);
+  }
+
+  changePage(increment: number) {
+    this.currentPage += increment;
+    this.displayPlans();
   }
 
   openAddPlanPopup() {

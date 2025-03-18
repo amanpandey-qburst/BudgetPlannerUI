@@ -10,8 +10,8 @@ export class AdminplanService {
 
   constructor(private http: HttpClient) {}
 
-  getPlans(page: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}?page=${page}`);
+  getPlans(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}`);
   }
 
   addPlan(plan: any): Observable<any> {

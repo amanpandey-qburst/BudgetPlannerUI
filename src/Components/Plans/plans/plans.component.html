@@ -5,20 +5,16 @@
     [(ngModel)]="searchQuery"
     placeholder="Search plans..."
     class="search-input"
+    (input)="filterPlans()"
   />
+
   <!-- Pagination Controls -->
   <div class="pagination-controls">
-    <button
-      (click)="currentPage = currentPage - 1"
-      [disabled]="currentPage === 1"
-    >
+    <button (click)="changePage(-1)" [disabled]="currentPage === 1">
       Previous
     </button>
     <span>Page {{ currentPage }} of {{ totalPages }}</span>
-    <button
-      (click)="currentPage = currentPage + 1"
-      [disabled]="currentPage === totalPages"
-    >
+    <button (click)="changePage(1)" [disabled]="currentPage === totalPages">
       Next
     </button>
   </div>
@@ -28,7 +24,7 @@
   <!-- Plan Cards -->
   <div
     class="plan-card"
-    *ngFor="let plan of filteredPlans"
+    *ngFor="let plan of displayedPlans"
     (click)="navigateToPlanDetails(plan)"
   >
     <h3>{{ plan.name }}</h3>
@@ -42,7 +38,7 @@
   </div>
 </div>
 
-<!-- Modal Popup for Add Plan -->
+
 <div *ngIf="isAddPlanPopupOpen" class="modal">
   <div class="modal-content">
     <h2>Add New Plan</h2>
