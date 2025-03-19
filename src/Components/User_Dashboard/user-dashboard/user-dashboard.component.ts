@@ -280,28 +280,33 @@ closeManageCategoriesModal(): void {
 
 // Save Changes to API
 saveCategoryChanges(): void {
-  // Find the current selected categories based on categoryID
-  const selectedCategoryIds = this.existingselectedCategories.map(cat => cat.categoryID);
+  // Use the latest selectedCategories instead of existingselectedCategories
+  const selectedCategoryIds = this.selectedCategories.map(cat => cat.categoryId);
 
   // Compare with the categories array to check which ones are removed
   const removedCategories = this.categories
-    .filter(cat => !selectedCategoryIds.includes(cat.categoryID))
-    .map(cat => cat.categoryID);
+    .filter(cat => !selectedCategoryIds.includes(cat.categoryId))
+    .map(cat => cat.categoryId);
 
   console.log('Selected Category IDs:', selectedCategoryIds);
   console.log('Removed Categories:', removedCategories);
 
-  // Now only send the selected categories (added/remaining categories)
+  // Send only the latest selected categories (not the old existing ones)
   this.dashboardService.updateCategories("0dc3331c-e54e-45a1-ba3a-366b12a7ed46", selectedCategoryIds).subscribe(
     () => {
-      alert("Categories updated successfully!");
+
       // Handle further UI updates like closing modals or refreshing data
+      this.fetchDashboardData();
+
+
+      this.closeManageCategoriesModal();
     },
     (error) => {
       console.error("Error updating categories:", error);
     }
   );
 }
+
 
 moveToAvailable(category: any) {
   this.selectedCategories = this.selectedCategories.filter(c => c.categoryId !== category.categoryId);
@@ -312,6 +317,8 @@ moveToAvailable(category: any) {
 moveToSelected(category: any) {
   this.availableCategories = this.availableCategories.filter(c => c.categoryId !== category.categoryId);
   this.selectedCategories.push(category);
+  console.log('Selected Categories after move:', this.selectedCategories);
+
 }
 
 // Filter selected categories based on search

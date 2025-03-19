@@ -89,9 +89,9 @@
               <input type="text" [(ngModel)]="selectedSearch" placeholder="Search..." class="search-bar" />
               <div class="scrollable-list">
                 <ul>
-                  <li *ngFor="let category of filteredSelectedCategories()">
+                  <li *ngFor="let category of filteredSelectedCategories()" (click)="moveToAvailable(category)">
                     <span class="category-name">{{ category.categoryName }}</span>
-                    <span class="arrow" (click)="moveToAvailable(category)">→</span>
+                    <span class="arrow">→</span>
                   </li>
                 </ul>
               </div>
@@ -103,8 +103,8 @@
               <input type="text" [(ngModel)]="availableSearch" placeholder="Search..." class="search-bar" />
               <div class="scrollable-list">
                 <ul>
-                  <li *ngFor="let category of filteredAvailableCategories()">
-                    <span class="arrow" (click)="moveToSelected(category)">←</span>
+                  <li *ngFor="let category of filteredAvailableCategories()" (click)="moveToSelected(category)">
+                    <span class="arrow">←</span>
                     <span class="category-name">{{ category.categoryName }}</span>
                   </li>
                 </ul>

@@ -208,15 +208,23 @@ export class ExpenseComponent implements OnInit {
   }
 
   updateExpense(): void {
-    // this.expenseService.updateExpense(this.editableExpense).subscribe({
-    //   next: () => {
-    //     const index = this.expenses.findIndex(e => e.id === this.editableExpense.id);
-    //     if (index !== -1) this.expenses[index] = { ...this.editableExpense };
-    //     this.closeEditModal();
-    //   },
-    //   error: () => alert('Failed to update expense'),
-    // });
+    if (!this.editableExpense) {
+      return;
+    }
+  
+    this.expenseService.editExpense(this.editableExpense.id, this.editableExpense).subscribe({
+      next: () => {
+        const index = this.expenses.findIndex(e => e.id === this.editableExpense.id);
+        if (index !== -1) {
+          this.expenses[index] = { ...this.editableExpense };
+        }
+        this.closeEditModal();
+      },
+      error: () => {
+      }
+    });
   }
+  
 
   openDeleteConfirmation(expense: any): void {
     this.selectedExpense = expense;
@@ -229,14 +237,21 @@ export class ExpenseComponent implements OnInit {
   }
 
   deleteExpense(): void {
-    // this.expenseService.deleteExpense(this.selectedExpense.id).subscribe({
-    //   next: () => {
-    //     this.expenses = this.expenses.filter(e => e.id !== this.selectedExpense.id);
-    //     this.closeDeleteModal();
-    //   },
-    //   error: () => alert('Failed to delete expense'),
-    // });
+    if (!this.selectedExpense) {
+      return;
+    }
+  
+    this.expenseService.deleteExpense(this.selectedExpense.id).subscribe({
+      next: () => {
+        this.expenses = this.expenses.filter(e => e.id !== this.selectedExpense.id);
+        this.closeDeleteModal();
+
+      },
+      error: () => {
+      }
+    });
   }
+  
 
 
 
