@@ -49,7 +49,6 @@
   justify-content: flex-start; 
   gap: 20px;
   padding: 10px;
-  background-color: #7ab2d3;
   height: calc(100vh - 112px);
   overflow-y: auto;
   width: 100%;

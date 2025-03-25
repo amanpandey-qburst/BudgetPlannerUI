@@ -20,7 +20,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #1e3e62;
+  background-color: #3674B5;
   color: white;
   height: 60px;
   padding: 0 20px;
@@ -82,7 +82,7 @@ body {
 
 .sidebar {
   width: 200px;
-  background-color: #1e3e62;
+  background-color: #578FCA;
   color: white;
   display: flex;
   flex-direction: column;
@@ -110,28 +110,30 @@ body {
 }
 
 .sidebar ul li a {
-  color: white;
+  color: black;
   text-decoration: none;
   font-size: 18px;
   display: block;
   width: 100%;
   padding: 10px;
+font-weight: 400;
 }
 
 .sidebar ul li a:hover {
-  background-color: white;
-  color: black;
+  background-color: #3674B5;
+  color: white;
+  font-weight: 600;
 }
 
 .sidebar ul li a.active {
-  background-color: #7ab2d3; /* Highlighted background */
+  background-color: #3674B5; /* Highlighted background */
   color: white; /* Highlighted text color */
   font-weight: bold; /* Optional: Make the active text bold */
 }
 
 .content {
   overflow-y: auto;
-  background-color: #7ab2d3;
+  background-color: #EFF3EA;
   height: calc(100vh - 60px);
   padding: 0%;
   width: 100%;
@@ -151,3 +153,5 @@ body {
     display: contents;
   }
 }
+
+

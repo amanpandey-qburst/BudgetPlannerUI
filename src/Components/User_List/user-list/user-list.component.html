@@ -1,0 +1,57 @@
+<div class="search-pagination-bar">
+    <!-- Search Bar (Left) -->
+    <input
+      type="text"
+      placeholder="Search users..."
+      [(ngModel)]="searchText"
+      class="search-input"
+    />
+
+    <!-- Pagination Controls (Right) -->
+    <div class="pagination-controls">
+      <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+    </div>
+</div>
+
+<!-- User Cards Grid -->
+<div class="category-container">
+    <div *ngFor="let user of filteredUsers()" class="category-card">
+        <img [src]="user.photoURL" alt="User Photo" class="user-avatar" />
+        <div class="user-info" (click)="fetchUserFinancialDetails(user.id)" style="cursor: pointer;">
+            <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+            <p>{{ user.emailId }}</p>
+            <p class="role">Gender: {{ user.gender }}</p>
+            <p>DOB: {{ user.dateOfBirth | date: 'dd/MM/yyyy' }}</p>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- User Financial Details Modal -->
+<div *ngIf="isUserSelected" class="modal-overlay">
+    <div class="user-financial-details">
+        <button class="close-btn" (click)="closeModal()">✖</button>
+
+        <div class="title">Financial Overview</div>
+
+        <div class="summary">
+            <p><strong>Total Income:</strong> ₹{{ selectedUserFinancialDetails.totalIncome }}</p>
+            <p><strong>Total Expenses:</strong> ₹{{ selectedUserFinancialDetails.totalExpenses }}</p>
+        </div>
+
+        <div class="sub-title">Category-wise Expenses</div>
+        <div class="expense-table">
+            <div class="expense-row header">
+                <span>Category</span>
+                <span>Expense (₹)</span>
+            </div>
+            <div *ngFor="let category of selectedUserFinancialDetails.categoryExpenses" class="expense-row">
+                <span>{{ category.categoryName }}</span>
+                <span>₹{{ category.expense }}</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -23,6 +23,7 @@ export class HomeComponent {
     { label: 'Dashboard', route: 'dashboard' },
     { label: 'Categories', route: 'categories' },
     { label: 'Plans', route: 'plans' },
+    { label: 'User List', route: 'user-list' },
   ];
 
   nonAdminMenuItems = [
@@ -44,7 +45,14 @@ export class HomeComponent {
  ngOnInit(): void {
   this.firstName = this.loginService.getFirstName();
   this.lastName = this.loginService.getLastName();
-    this.isAdmin = this.loginService.getIsAdmin();
+  const storedAdminStatus = sessionStorage.getItem('isAdmin');
+    if (storedAdminStatus !== null) {
+      this.isAdmin = storedAdminStatus === 'true';
+    } else {
+      this.isAdmin = this.loginService.getIsAdmin();
+      sessionStorage.setItem('isAdmin', String(this.isAdmin)); 
+    }
+
 
     const defaultRoute = this.getDefaultMenuRoute(); 
     this.activeMenu = defaultRoute;
@@ -66,6 +74,7 @@ export class HomeComponent {
     this.userDataService.clearUserData();
     this.socialAuthService.signOut();
     this.router.navigate(['/login']);
+    sessionStorage.removeItem('isAdmin'); 
   }
 
   navigateTo(route: string) {
