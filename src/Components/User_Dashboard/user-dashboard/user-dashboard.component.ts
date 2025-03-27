@@ -199,7 +199,6 @@ export class UserDashboardComponent implements OnInit {
 
 closeAllocationModal(): void {
   this.isAllocationModalOpen = false;
-  console.log("hitallocation");
 }
 
 updateTotalAllocation(): void {
@@ -222,10 +221,9 @@ this.allocationError = '';
     allocation: category.allocation
   }));
 
-  this.dashboardService.editCategoryAllocation("3a40f240-c29c-4a5e-bda2-aa558c4fdf61", categoryAllocations).subscribe(
+  this.dashboardService.editCategoryAllocation( categoryAllocations).subscribe(
     () => {
-      alert("Allocations updated successfully!");
-      // Handle further UI updates like closing modals or refreshing data
+      this.closeAllocationModal();
     },
     (error) => {
       console.error("Error updating allocations:", error);
@@ -247,35 +245,6 @@ closeManageCategoriesModal(): void {
   console.log("hitmanage");
 }
 
-// // Add Category
-// addCategory(category: any): void {
-//   if (!this.categories.some((cat) => cat.categoryID === category.id)) {
-//     this.categories.push({ ...category, allocation: 0, categoryID: category.id });
-//     this.existingselectedCategories.push({ ...category, allocation: 0, categoryID: category.id });
-//     this.filterRemainingCategories(); // Refilter remaining categories after adding
-//   }
-// }
-
-// // Remove Category
-// removeCategory(index: number): void {
-//   // Get the category to be removed
-//   const categoryToRemove = this.categories[index];
-
-//   // Remove from the categories list (UI update)
-//   this.categories.splice(index, 1);
-
-//   // Remove from the selected category list (selectedCategoryIds)
-//   const categoryIndex = this.existingselectedCategories.findIndex(
-//     (cat) => cat.categoryID === categoryToRemove.categoryID
-//   );
-//   if (categoryIndex !== -1) {
-//     this.existingselectedCategories.splice(categoryIndex, 1);
-//   }
-
-//   // Optionally, you could log to see the updated lists
-//   console.log("Updated Categories List:", this.categories);
-//   console.log("Updated Selected Categories List:", this.existingselectedCategories);
-// }
 
 
 // Save Changes to API
@@ -288,11 +257,9 @@ saveCategoryChanges(): void {
     .filter(cat => !selectedCategoryIds.includes(cat.categoryId))
     .map(cat => cat.categoryId);
 
-  console.log('Selected Category IDs:', selectedCategoryIds);
-  console.log('Removed Categories:', removedCategories);
 
   // Send only the latest selected categories (not the old existing ones)
-  this.dashboardService.updateCategories("0dc3331c-e54e-45a1-ba3a-366b12a7ed46", selectedCategoryIds).subscribe(
+  this.dashboardService.updateCategories( selectedCategoryIds).subscribe(
     () => {
 
       // Handle further UI updates like closing modals or refreshing data

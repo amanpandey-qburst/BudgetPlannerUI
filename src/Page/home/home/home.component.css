@@ -3,7 +3,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  user-select: none;
 }
+
+
 
 html,
 body {
@@ -42,6 +45,9 @@ body {
 }
 
 .navbar-brand {
+  font-family: "Audiowide", sans-serif;
+  font-weight: 400;
+  font-style: normal;
   font-size: 24px;
   font-weight: bold;
   color: white;
@@ -117,10 +123,11 @@ body {
   width: 100%;
   padding: 10px;
 font-weight: 400;
+cursor: pointer;
 }
 
 .sidebar ul li a:hover {
-  background-color: #3674B5;
+  background-color: #4e85c1;
   color: white;
   font-weight: 600;
 }

@@ -27,14 +27,14 @@ export class UserDashboardService {
   }
 
   // Method to edit category allocation (update allocation for existing categories)
-  editCategoryAllocation(userId: string, categoryAllocations: any[]): Observable<any> {
-    const url = `https://localhost:7156/api/User/updateCategoryAllocation/${userId}`;
+  editCategoryAllocation( categoryAllocations: any[]): Observable<any> {
+    const url = `https://localhost:7156/api/User/updateCategoryAllocation`;
     return this.http.put(url, categoryAllocations, { headers: this.getHeaders() });
   }
 
   // Method to update categories (add/remove categories from user plan)
-  updateCategories(userId: string, categoryIds: any[]): Observable<any> {
-    const url = `https://localhost:7156/api/User/updateCategories/${userId}`;
+  updateCategories( categoryIds: any[]): Observable<any> {
+    const url = `https://localhost:7156/api/User/updateCategories`;
     return this.http.put(url, categoryIds, { headers: this.getHeaders() });
   }
 

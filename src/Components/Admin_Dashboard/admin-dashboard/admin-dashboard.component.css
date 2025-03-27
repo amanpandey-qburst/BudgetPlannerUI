@@ -35,12 +35,13 @@ border-color: black;
 }
 
 .btn:hover {
-  background-color: #578FCA;
+  background-color: #D5E5D5;
   transform: scale(1.05);
 }
 
 .btn:focus {
   outline: none;
+    background-color: #98D2C0;
 }
 
 /* Styling for the date picker section */

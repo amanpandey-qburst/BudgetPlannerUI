@@ -25,22 +25,25 @@
     </div>
 
     <div class="expenses-table">
-        <h3>Expenses Summary</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Total Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let expense of expensesData">
-              <td>{{ expense.categoryName }}</td>
-              <td>₹{{ expense.totalAmount  }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <h3>Expenses Summary</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Total Amount (₹)</th>
+            <th>Percentage (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let expense of expensesData">
+            <td>{{ expense.categoryName }}</td>
+            <td>₹{{ expense.totalAmount }}</td>
+            <td>{{ getExpensePercentage(expense.totalAmount) }}%</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+  
 
    
 

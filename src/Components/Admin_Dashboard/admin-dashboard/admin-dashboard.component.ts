@@ -91,6 +91,14 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
     );
   }
 
+  getExpensePercentage(amount: number): string {
+    if (!this.expensesData || this.expensesData.length === 0) return '0';
+    
+    const totalExpense = this.expensesData.reduce((sum, expense) => sum + expense.totalAmount, 0);
+    
+    return totalExpense > 0 ? ((amount / totalExpense) * 100).toFixed(2) : '0';
+  }
+
   /** 
    * Updates chart based on selected number of days
    * It calculates the start date and calls `fetchGraphData()`

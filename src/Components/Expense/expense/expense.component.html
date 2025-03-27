@@ -47,7 +47,7 @@
             <td>{{ expense.expenseName }}</td>
             <td>{{ expense.amount | currency: 'INR' }}</td>
             <td>{{ expense.subCategoryName || 'N/A' }}</td>
-            <td>{{ expense.createdDate | date: 'short' }}</td>
+            <td>{{ expense.createdDate | date: 'dd/MM/yyyy HH:mm' }}</td>
             <td class="action-column">
               <div class="menu-container">
                 <button class="menu-button" (click)="toggleMenu(expense, $event)">⋮</button>
