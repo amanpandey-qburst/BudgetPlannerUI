@@ -9,9 +9,12 @@
         </div>
         <div class="financial-summary">
           <h5>Financial Summary</h5>
-          <p><strong>Income this month:</strong> ₹{{ userIncome }}</p>
+          <p><strong>Current Plan Income:</strong> ₹{{ userIncome }}</p>
           <p><strong>Total Expenditure:</strong> ₹{{ totalExpenditure }}</p>
           <p><strong>Remaining Money:</strong> ₹{{ remainingMoney }}</p>
+          <p><strong>Auto Reset Enabled:</strong> {{ isAutoResetEnabled ? 'Yes' : 'No' }}</p>
+
+          
         </div>
       </div>
   
@@ -19,9 +22,23 @@
       <div class="right-section">
         <div class="categories-header">
           <h3>Categories</h3>
-          <button class="edit-btn" (click)="openAllocationModal()">Adjust Allocation</button>
-          <button class="edit-btn" (click)="openManageCategoriesModal()">Manage Categories</button>
+        
+          <div class="button-row">
+            <!-- Arrow toggle -->
+            <button class="arrow-btn" (click)="toggleMenu()">
+              {{ isMenuOpen ? '→' : '← Options' }}
+            </button>
+        
+            <!-- Sliding buttons container -->
+            <div [ngClass]="{ 'buttons-visible': isMenuOpen, 'buttons-hidden': !isMenuOpen }" class="buttons-container">
+              <button class="edit-btn" (click)="openAllocationModal()">Adjust Allocation</button>
+              <button class="edit-btn" (click)="openManageCategoriesModal()">Manage Categories</button>
+              <button class="edit-btn reset-btn" (click)="resetPlan()">Reset Plan</button>
+            </div>
+          </div>
         </div>
+        
+        
         
         <div class="category-grid">
           <div

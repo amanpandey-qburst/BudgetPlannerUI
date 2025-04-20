@@ -10,8 +10,16 @@
         <p><strong>Gender:</strong> {{ user.gender }}</p>
         <p><strong>Date of Birth:</strong> {{ user.dateOfBirth | date }}</p>
   
-        <!-- Edit Button -->
-        <button (click)="toggleEditMode()">{{ isEditMode ? 'Cancel' : 'Edit' }}</button>
+        <div class="button-group">
+          <!-- Edit Button -->
+          <button (click)="toggleEditMode()">{{ isEditMode ? 'Cancel' : 'Edit' }}</button>
+        
+          <!-- Auto Reset Settings Button -->
+          <button (click)="openAutoResetDialog()">Configure Auto Reset</button>
+        </div>
+        
+
+
       </div>
     </div>
   
@@ -75,3 +83,28 @@
     </div>
   </div>
   
+
+<!-- Auto Reset Dialog -->
+<div *ngIf="showAutoResetDialog" class="dialog-overlay">
+  <div class="dialog-box">
+    <h4>Configure Auto Reset</h4>
+
+    <div>
+      <label>
+        <input type="checkbox" [(ngModel)]="autoResetSettings.isAutoResetEnabled" />
+        Enable Auto Reset
+      </label>
+    </div>
+
+    <div *ngIf="autoResetSettings.isAutoResetEnabled">
+      <label for="autoResetDays">Auto Reset Days</label>
+      <input [(ngModel)]="autoResetSettings.autoResetDays" id="autoResetDays" type="number" placeholder="Enter days" />
+    </div>
+
+    <div class="dialog-buttons">
+      <button (click)="saveAutoResetSettings()">Save</button>
+      <button (click)="closeAutoResetDialog()">Cancel</button>
+      <button class="danger" (click)="removeAutoResetSettings()">Remove Auto Reset</button>
+    </div>
+  </div>
+</div>

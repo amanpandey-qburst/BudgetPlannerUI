@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 interface IncomeSource {
   amount: number;
   source: string;
+  creditOn: number; 
 }
 
 @Component({
@@ -22,8 +23,12 @@ export class RegistrationComponent implements OnInit {
   userId: string | null = null;
   router = inject(Router);
   errorMessages: string[] = [];
-  showSecondForm: boolean = false;
-  incomeSources: IncomeSource[] = [{ amount: 0, source: '' }];
+  incomeSources: IncomeSource[] = [{ amount: 0, source: '', creditOn: 0 }];
+  showUserForm: boolean = true;
+showIncomeForm: boolean = false;
+showPlanSelection: boolean = false;
+
+
 
   private apiUrl = 'https://localhost:7156/api/User/registerUser';
 
@@ -94,7 +99,8 @@ export class RegistrationComponent implements OnInit {
           // Store the userId from the response
           this.userId = response.data; // Assuming response.data contains the userId
 
-          this.showSecondForm = true; // Show the second form
+          this.showUserForm = false;
+          this.showIncomeForm = true; // Show the second form
         },
         error: (error) => {
           console.error('Error during registration', error);
@@ -107,8 +113,9 @@ export class RegistrationComponent implements OnInit {
   }
 
   addIncomeSource() {
-    this.incomeSources.push({ amount: 0, source: '' });
+    this.incomeSources.push({ amount: 0, source: '', creditOn: 0 });
   }
+  
 
   removeIncomeSource(index: number) {
     this.incomeSources.splice(index, 1);
@@ -119,22 +126,66 @@ export class RegistrationComponent implements OnInit {
       console.error('UserId not found. Cannot submit income details.');
       return;
     }
-
+  
     const apiUrl = `https://localhost:7156/api/User/addIncome/${this.userId}`;
-
-    this.http
-      .post(apiUrl, this.incomeSources, {
-        headers: { 'Content-Type': 'application/json' },
-        responseType: 'text',
-      })
-      .subscribe({
-        next: (response) => {
-          console.log('Income details submitted successfully', response);
-          this.router.navigate(['/home']);
-        },
-        error: (error) => {
-          console.error('Error submitting income details', error);
-        },
-      });
+  
+    this.http.post(apiUrl, this.incomeSources, {
+      headers: { 'Content-Type': 'application/json' },
+      responseType: 'text',
+    })
+    .subscribe({
+      next: (response) => {
+        console.log('Income details submitted successfully', response);
+  
+        // Now load eligible plans instead of navigating to home
+        this.loadEligiblePlans(); 
+      },
+      error: (error) => {
+        console.error('Error submitting income details', error);
+      },
+    });
   }
+  
+
+  eligiblePlans: any[] = [];
+
+  loadEligiblePlans() {
+    const plansUrl = `https://localhost:7156/api/User/getEligiblePlans/${this.userId}`;
+    this.http.get<any[]>(plansUrl).subscribe({
+      next: (plans) => {
+        this.eligiblePlans = plans;
+        this.showPlanSelection = true; // Show plan list
+        this.showIncomeForm = false;   // Hide income form
+        console.log('Eligible plans loaded:', plans);
+      },
+      error: (err) => {
+        console.error('Failed to load eligible plans', err);
+      }
+    });
+  }
+  
+
+
+selectedPlanId: string | null = null;
+
+submitSelectedPlan(planId: string) {
+  if (!this.userId) return;
+
+  const body = {
+    userId: this.userId,
+    adminPlanId: planId
+  };
+
+  this.http.post('https://localhost:7156/api/User/submitSelectedPlan', body)
+    .subscribe({
+      next: () => {
+        console.log('Plan saved successfully');
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.error('Error submitting plan', err);
+      }
+    });
+}
+
 }

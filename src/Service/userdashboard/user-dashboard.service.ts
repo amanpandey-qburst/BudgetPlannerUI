@@ -43,4 +43,16 @@ export class UserDashboardService {
     const url = `${this.apiUrl}/get-user-categories`;
     return this.http.get(url, { headers: this.getHeaders() });
   }
+
+  resetUserPlan(): Observable<any> {
+    const url = `https://localhost:7156/api/UserPlan/reset-plan`;
+    return this.http.post(url, {}, { headers: this.getHeaders() });
+  }
+  
+  checkAndResetUserPlan(): Observable<any> {
+    const apiUrl = 'https://localhost:7156/api/UserPlan/check-and-reset-plan-if-needed';
+    return this.http.post(apiUrl, {}, { headers: this.getHeaders() });// Assuming the backend gets userId from token
+  }
+  
+  
 }

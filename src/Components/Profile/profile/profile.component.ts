@@ -81,4 +81,59 @@ export class ProfileComponent implements OnInit {
     console.log('Changes saved:', this.user);
     this.toggleEditMode(); // Exit edit mode after saving
   }
+
+  showAutoResetDialog = false;
+autoResetSettings = {
+  isAutoResetEnabled: false,
+  autoResetDays: null
+};
+
+openAutoResetDialog() {
+  this.showAutoResetDialog = true;
+}
+
+closeAutoResetDialog() {
+  this.showAutoResetDialog = false;
+}
+
+saveAutoResetSettings(): void {
+  // Optional: Validate input before sending
+  if (
+    this.autoResetSettings.isAutoResetEnabled &&
+    (this.autoResetSettings.autoResetDays === null || this.autoResetSettings.autoResetDays <= 0)
+  ) {
+    alert("Please enter a valid number of days for auto reset.");
+    return;
+  }
+
+  this.userService.updateAutoResetSettings(this.autoResetSettings).subscribe({
+    next: (res) => {
+      console.log('Auto reset settings updated:', res);
+      this.closeAutoResetDialog();
+    },
+    error: (err) => {
+      console.error('Failed to update auto reset settings:', err);
+    }
+  });
+}
+
+removeAutoResetSettings() {
+  if (confirm('Are you sure you want to remove auto reset settings?')) {
+    this.userService.removeAutoResetSettings().subscribe({
+      next: (res) => {
+        console.log('Auto reset settings removed:', res);
+        this.autoResetSettings = {
+          isAutoResetEnabled: false,
+          autoResetDays: null
+        };
+        this.closeAutoResetDialog();
+      },
+      error: (err) => {
+        console.error('Failed to remove auto reset settings:', err);
+      }
+    });
+  }
+}
+
+
 }

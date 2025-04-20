@@ -43,6 +43,10 @@ export class UserDashboardComponent implements OnInit {
   availableCategories: any[] = [];
   selectedSearch: string = '';
   availableSearch: string = '';
+  isAutoResetEnabled: boolean = false;
+  autoResetDays: number | null = null;
+  lastResetDate: string | null = null;
+  
  
 
   constructor(private dashboardService: UserDashboardService, private categoryService: CategoryService) {}
@@ -54,6 +58,12 @@ export class UserDashboardComponent implements OnInit {
     this.fetchUserCategories();
   }
 
+  isMenuOpen: boolean = false; // Controls the visibility of the sliding menu
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
   fetchDashboardData(): void {
     this.dashboardService.getUserPlanDetails().subscribe(
       (response) => {
@@ -62,6 +72,9 @@ export class UserDashboardComponent implements OnInit {
         this.userIncome = response.income || 0;
         this.totalExpenditure = response.totalExpense || 0;
         this.remainingMoney = this.userIncome - this.totalExpenditure;
+        this.isAutoResetEnabled = response.isAutoResetEnabled;
+        this.autoResetDays = response.autoResetDays;
+        this.lastResetDate = response.lastResetDate;
 
         // Map allocations to categories
         this.categories = response.allocations.map((allocation: any, index: number) => ({
@@ -302,6 +315,21 @@ filteredAvailableCategories() {
   );
 }
 
+resetPlan(): void {
+  if (confirm('Are you sure you want to reset your plan?')) {
+    this.dashboardService.resetUserPlan().subscribe(
+      (response) => {
+        console.log('Plan reset successfully!', response);
+        // After successful reset, you might want to re-fetch fresh data
+        this.fetchDashboardData();
+        this.fetchUserCategories();
+      },
+      (error) => {
+        console.error('Error resetting plan:', error);
+      }
+    );
+  }
+}
 
 
 

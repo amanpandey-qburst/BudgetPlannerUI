@@ -4,6 +4,7 @@ import { UserDataService } from '../../../Service/userData/user-data.service';
 import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { LoginService } from '../../../Service/login/login.service';
 import { CommonModule } from '@angular/common';
+import { UserDashboardService } from '../../../Service/userdashboard/user-dashboard.service';
 
 @Component({
   selector: 'app-home',
@@ -39,6 +40,7 @@ export class HomeComponent {
     private loginService: LoginService,
     private userDataService: UserDataService,
     private socialAuthService: SocialAuthService,
+    private dashboardService: UserDashboardService,
 
   ) {}
 
@@ -52,6 +54,17 @@ export class HomeComponent {
       this.isAdmin = this.loginService.getIsAdmin();
       sessionStorage.setItem('isAdmin', String(this.isAdmin)); 
     }
+
+
+      // ✅ Check and reset user plan if needed
+  this.dashboardService.checkAndResetUserPlan().subscribe({
+    next: (res) => {
+      console.log('Auto reset check complete:', res);
+    },
+    error: (err) => {
+      console.error('Auto reset check failed:', err);
+    }
+  });
 
 
     const defaultRoute = this.getDefaultMenuRoute(); 
