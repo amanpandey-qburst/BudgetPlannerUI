@@ -24,6 +24,7 @@ interface User {
 export class UserprofileService {
   private profileApiUrl = 'https://localhost:7156/api/UserPlan/GetUserWithIncomeDetails';
   private autoResetApiUrl = 'https://localhost:7156/api/UserPlan/update-auto-reset-settings';
+  private updateProfileApiUrl = 'https://localhost:7156/api/User/updateProfile';
 
   constructor(private http: HttpClient) {}
 
@@ -52,6 +53,15 @@ export class UserprofileService {
     return this.http.post('https://localhost:7156/api/UserPlan/remove-auto-reset-settings', {}, { headers });
   }
 
+
+  updateUserProfile(user: User): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${sessionStorage.getItem('authToken')}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put(this.updateProfileApiUrl, user, { headers });
+  }
 
 
   

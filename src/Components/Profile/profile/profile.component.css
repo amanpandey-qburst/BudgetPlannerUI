@@ -1,202 +1,340 @@
 /* Profile container */
 .profile-container {
-    max-width: 800px;
-    margin: 30px auto;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Profile Header */
-  .profile-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .avatar-container {
-    flex-shrink: 0;
-    margin-right: 20px;
-  }
-  
-  .avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #007bff;
-  }
-  
-  .user-info {
-    flex-grow: 1;
-  }
-  
-  .user-info h2 {
-    margin: 0;
-    font-size: 1.8em;
-    color: #333;
-  }
-  
-  .user-info p {
-    margin: 5px 0;
-    color: #555;
-  }
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-  .button-group {
-    display: flex;
-    gap: 12px; /* space between buttons */
-    margin-bottom: 20px; /* optional: spacing below the button group */
-  }
-  
-  /* Edit button */
-  button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    margin-top: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Editable Profile Form */
-  .edit-profile-form div {
-    margin-bottom: 15px;
-  }
-  
-  .edit-profile-form label {
-    display: block;
-    font-weight: bold;
-  }
-  
-  .edit-profile-form input,
-  .edit-profile-form select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  /* Incomes Section */
-  .incomes-section {
-    margin-top: 30px;
-  }
-  
-  .incomes-section h3 {
-    font-size: 1.5em;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  .income {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-  
-  .income-details {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-  
-  .source {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #007bff;
-  }
-  
-  .amount {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: green;
-  }
-  
-  .dialog-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .dialog-box {
-    background: #fff;
-    padding: 25px 30px;
-    border-radius: 12px;
-    width: 320px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  }
-  
-  .dialog-title {
-    margin-bottom: 20px;
-    font-size: 20px;
-    font-weight: 600;
-    text-align: center;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  input[type='number'],
-  input[type='text'] {
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    margin-top: 5px;
-  }
-  
-  .checkbox-label {
-    margin-left: 8px;
-    font-size: 14px;
-  }
-  
-  .dialog-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  
-  .dialog-buttons button {
-    padding: 8px 14px;
-    font-size: 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  button.primary {
-    background-color: #3498db;
-    color: white;
-  }
-  
-  button.secondary {
-    background-color: #bdc3c7;
-    color: white;
-  }
-  
-  button.danger {
-    background-color: #e74c3c;
-    color: white;
-  }
-  
+/* Profile Header */
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.avatar-container {
+  flex-shrink: 0;
+  margin-right: 20px;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007bff;
+}
+
+.user-info {
+  flex-grow: 1;
+}
+
+.user-info h2 {
+  margin: 0;
+  font-size: 1.8em;
+  color: #333;
+}
+
+.user-info p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* Edit button */
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Editable Profile Form */
+.edit-profile-form div {
+  margin-bottom: 15px;
+}
+
+.edit-profile-form label {
+  display: block;
+  font-weight: bold;
+}
+
+.edit-profile-form input,
+.edit-profile-form select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Incomes Section */
+.incomes-section {
+  margin-top: 30px;
+}
+
+/* Form for adding new income */
+.add-income-form {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f1f1f1;
+}
+
+.add-income-form label {
+  font-weight: bold;
+}
+
+.add-income-form input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.add-income-form button {
+  align-self: flex-start;
+  background-color: #28a745;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.add-income-form button:hover {
+  background-color: #218838;
+}
+
+/* Income List */
+.income-list {
+  margin-top: 20px;
+}
+
+.income {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.income-details {
+  display: flex;
+  gap: 20px;
+}
+
+.source,
+.amount,
+.creditOn {
+  font-size: 1.1em;
+  color: #333;
+}
+
+.source {
+  font-weight: bold;
+}
+
+.amount {
+  font-weight: bold;
+  color: green;
+}
+
+.creditOn {
+  color: #f39c12;
+}
+
+.income-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.income-buttons button {
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.income-buttons button:hover {
+  background-color: #0056b3;
+}
+
+/* Dialog Overlay */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-box {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  width: 320px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.dialog-title {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.dialog-buttons button {
+  padding: 8px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button.primary {
+  background-color: #3498db;
+  color: white;
+}
+
+button.secondary {
+  background-color: #bdc3c7;
+  color: white;
+}
+
+button.danger {
+  background-color: #e74c3c;
+  color: white;
+}
+
+
+
+/* Dialog Overlay */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-box {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  width: 320px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.dialog-title {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.dialog-buttons button {
+  padding: 8px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button.primary {
+  background-color: #3498db;
+  color: white;
+}
+
+button.secondary {
+  background-color: #bdc3c7;
+  color: white;
+}
+
+button.danger {
+  background-color: #e74c3c;
+  color: white;
+}
+
+/* Auto Reset Configuration Section */
+.auto-reset-section {
+  margin-top: 30px;
+  background-color: #f1f1f1;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.auto-reset-section label {
+  font-weight: bold;
+}
+
+.auto-reset-section select {
+  padding: 8px;
+  font-size: 14px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.auto-reset-section button {
+  background-color: #f39c12;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.auto-reset-section button:hover {
+  background-color: #e67e22;
+}

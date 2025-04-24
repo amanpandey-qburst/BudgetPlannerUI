@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 interface IncomeSource {
   amount: number;
   source: string;
-  creditOn: number; 
+  CreditOn: number; 
 }
 
 @Component({
@@ -23,10 +23,12 @@ export class RegistrationComponent implements OnInit {
   userId: string | null = null;
   router = inject(Router);
   errorMessages: string[] = [];
-  incomeSources: IncomeSource[] = [{ amount: 0, source: '', creditOn: 0 }];
+  incomeSources: IncomeSource[] = [{ amount: 0, source: '', CreditOn: 0 }];
   showUserForm: boolean = true;
 showIncomeForm: boolean = false;
 showPlanSelection: boolean = false;
+autoResetEnabled: boolean = false;
+resetDays: number | null = null;
 
 
 
@@ -113,7 +115,7 @@ showPlanSelection: boolean = false;
   }
 
   addIncomeSource() {
-    this.incomeSources.push({ amount: 0, source: '', creditOn: 0 });
+    this.incomeSources.push({ amount: 0, source: '', CreditOn: 1 });
   }
   
 
@@ -173,7 +175,9 @@ submitSelectedPlan(planId: string) {
 
   const body = {
     userId: this.userId,
-    adminPlanId: planId
+    adminPlanId: planId,
+    isAutoResetEnabled: this.autoResetEnabled,
+    autoResetDays: this.autoResetEnabled ? this.resetDays : null
   };
 
   this.http.post('https://localhost:7156/api/User/submitSelectedPlan', body)

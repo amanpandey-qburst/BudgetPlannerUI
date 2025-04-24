@@ -111,13 +111,13 @@
         </div>
 
         <div class="form-group">
-          <label for="creditOn{{ i }}">Credit Date<span class="required">*</span></label>
+          <label for="CreditOn{{ i }}">Credit Date<span class="required">*</span></label>
          
           <input
           type="number"
-          id="creditOn{{ i }}"
-          [(ngModel)]="income.creditOn"
-          name="creditOn{{ i }}"
+          id="CreditOn{{ i }}"
+          [(ngModel)]="income.CreditOn"
+          name="CreditOn{{ i }}"
           required
         />
         </div>
@@ -135,13 +135,28 @@
     </div>
   </form>
 </div>
-
 <!-- Eligible Plans Section -->
 <div *ngIf="showPlanSelection" class="plan-list-container">
   <h2>Select a Budget Plan</h2>
+
+  <!-- Global Auto Reset Option -->
+  <div class="reset-options-global">
+    <label>
+      <input type="checkbox" [(ngModel)]="autoResetEnabled" />
+      Enable Auto Reset
+    </label>
+
+    <div *ngIf="autoResetEnabled">
+      <label for="resetDays">Reset Every (Days):</label>
+      <input type="number" [(ngModel)]="resetDays" min="1" />
+    </div>
+  </div>
+
+  <!-- Plans -->
   <div *ngFor="let plan of eligiblePlans" class="plan-card">
     <h3>{{ plan.name }}</h3>
     <p><strong>Minimum Income:</strong> ₹{{ plan.minimumIncome }}</p>
+
     <div class="allocations">
       <h4>Allocations</h4>
       <ul>
@@ -150,6 +165,7 @@
         </li>
       </ul>
     </div>
+
     <button (click)="submitSelectedPlan(plan.id)">Choose This Plan</button>
   </div>
 </div>
