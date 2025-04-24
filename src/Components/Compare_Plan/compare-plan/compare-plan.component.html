@@ -8,7 +8,11 @@
     </div>
   
     <div class="allocations">
-      <h3>Category Allocations</h3>
+      <div class="allocations-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>Category Allocations</h3>
+        <button (click)="openManageCategoriesModal()">Manage Categories</button>
+      </div>
+      
       <table>
         <thead>
           <tr>
@@ -65,3 +69,49 @@
     </div>
   </div>
   
+
+  <div *ngIf="isManageCategoriesModalOpen" class="modal show">
+    <div class="modal-content">
+      <h3>Manage Categories</h3>
+  
+  
+      <div class="category-container">
+        <!-- Selected Categories (Left) -->
+        <div class="category-list">
+          <h3>Selected Categories</h3>
+          <input type="text" [(ngModel)]="selectedSearch" placeholder="Search..." class="search-bar" />
+          <div class="scrollable-list">
+            <ul>
+              <li *ngFor="let category of filteredSelectedCategories()" (click)="moveToAvailable(category)">
+                <span class="category-name">{{ category.categoryName }}</span>
+                <span class="arrow">→</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      
+        <!-- Available Categories (Right) -->
+        <div class="category-list">
+          <h3>Available Categories</h3>
+          <input type="text" [(ngModel)]="availableSearch" placeholder="Search..." class="search-bar" />
+          <div class="scrollable-list">
+            <ul>
+              <li *ngFor="let category of filteredAvailableCategories()" (click)="moveToSelected(category)">
+                <span class="arrow">←</span>
+                <span class="category-name">{{ category.categoryName }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      
+      
+      
+  
+      <div class="modal-actions">
+        <button (click)="saveCategoryChanges()">Save</button>
+        <button (click)="closeManageCategoriesModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
